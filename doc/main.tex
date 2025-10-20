@@ -1,0 +1,76 @@
+\documentclass[a4paper, 12pt]{article}
+
+% ---------  ---------------------------
+% Configuración general del documento
+% --------------------------------------
+% Define tamaño de papel y márgenes
+\usepackage[a4paper, top=2.3cm, bottom=3cm, inner=3.7cm, outer=2.6cm]{geometry}
+% Espaciado entre párrafos
+\setlength{\parskip}{0.5em plus 0.2em minus 0.1em}
+
+% --------------------------------------
+% Paquetes básicos
+% --------------------------------------
+% Hipervínculos en el PDF
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, pdfborder={0 0 0}]{hyperref}
+% Codificación UTF-8 y caracteres especiales
+\usepackage[utf8]{inputenc} 
+% Idioma del documento
+\usepackage[spanish]{babel}
+
+% --------------------------------------
+% Paquetes adicionales
+% --------------------------------------
+% Cajas de color y resaltado de texto
+\usepackage{tcolorbox}
+% Marcos personalizables con TikZ
+\usepackage[framemethod=TikZ]{mdframed}
+% Permite romper URLs muy largas automáticamente
+\usepackage{xurl} 
+
+% --------------------------------------
+% Citaciones
+% --------------------------------------
+% Gestión de bibliografía con estilo IEEE y referencias numéricas
+\usepackage[style=ieee, citestyle=numeric-comp, backend=biber, backref=true, maxnames=99]{biblatex}
+% Traducción de algunos textos al español
+\DefineBibliographyStrings{spanish}{
+   backrefpage = {Citado en pág.},
+   backrefpages = {Citado en págs.},
+   url = {URL},
+}
+% Evita desbordes de línea en bibliografía
+\appto{\bibsetup}{\sloppy}
+% Archivo de bibliografía
+\addbibresource{bibliografia.bib}
+
+% --------------------------------------
+% Documento
+% --------------------------------------
+\begin{document}
+
+    \thispagestyle{empty}
+    
+    \input{portada/portada}
+    
+    % ----------------------------------------------
+    
+    \pagenumbering{roman}
+    
+    \tableofcontents
+    \newpage
+
+    % ----------------------------------------------
+
+    \pagenumbering{arabic}
+    
+    \input{secciones/sec1/1_Introducción.tex}
+    \input{secciones/sec2/2_ChurnSpotify.tex}
+    \newpage
+
+    % ----------------------------------------------
+
+    \nocite{*}
+    \printbibliography
+
+\end{document}
