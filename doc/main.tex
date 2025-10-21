@@ -17,6 +17,8 @@
 \usepackage[utf8]{inputenc} 
 % Idioma del documento
 \usepackage[spanish]{babel}
+% Definición y uso de colores
+\usepackage{xcolor}
 
 % --------------------------------------
 % Paquetes adicionales
@@ -27,6 +29,16 @@
 \usepackage[framemethod=TikZ]{mdframed}
 % Permite romper URLs muy largas automáticamente
 \usepackage{xurl} 
+% Mejoras para subrayado y resaltado de texto
+\usepackage{soul}
+
+% --------------------------------------
+% Configuraciones personalizadas
+% --------------------------------------
+% Declara un nuevo comando para formato de código
+\definecolor{lightgray}{gray}{0.9}
+\sethlcolor{lightgray}
+\newcommand{\code}[1]{\hl{\texttt{#1}}}
 
 % --------------------------------------
 % Citaciones

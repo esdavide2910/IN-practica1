@@ -1,1 +1,71 @@
 \section{Churn de usuarios en Spotify}
+
+% ---------------------------------------------------------------------------------------------------------- %
+
+\subsection{Descripción del proyecto}
+
+\subsubsection{Objetivo}
+
+El objetivo es predecir la pérdida de usuarios (\textit{churn} en inglés) en función de datos personales de los usuarios y de su interacción con el servicio. Las conclusiones de este análisis intentan ayudar en la toma de decisiones de la empresa para reducir el número de cancelaciones.
+
+\subsubsection{Datos}
+
+El conjunto de datos que usamos para entrenar nuestro modelo está disponible en la base de datos de Kaggle: \href{https://www.kaggle.com/datasets/nabihazahid/spotify-dataset-for-churn-analysis/data}{Spotify Analysis Dataset 2025}. 
+Ya hemos descargado el fichero con extensión \texttt{.csv} en el directorio \texttt{datasets}.
+
+En el \textit{dataset} encontramos 12 columnas, donde diferenciamos a los atributos de la variable objetivo. 
+La variable objetivo, o \textit{target}, es aquella que deseamos predecir a partir de los atributos; 
+en este caso esta es \code{is\_churned}, y es una variable binaria que toma dos valores:
+\begin{itemize}
+    \item \code{1}, cuando el usuario ha cancelado su cuenta; o
+    \item \code{0}, cuando el usuario sigue activo.
+\end{itemize}
+
+En los atributos podemos diferenciar dos principales tipos de variables: numéricas y categóricas. 
+Dentro de las variables numéricas, se pueden distinguir aquellas representadas como números enteros y las que se expresan en formato en coma flotante.
+
+Cada tipo de dato requiere un tratamiento específico, y algunos modelos serán más adecuados que otros para cada tipo. En ocasiones, será necesario modificar la codificación para garantizar una mejor compatibilidad con el modelo.
+\begin{itemize}
+    \item Modelos como los de árboles de decisión, \textit{Random Forest} o \textit{Naive Bayes} ---en su forma base--- funcionan con datos categóricos.
+    \item Modelos como los de \textit{K-Nearest Neighbour}, las \textit{Support Vector Machine} o las redes neuronales, ---de nuevo, hablamos en su forma base--- trabajan con datos numéricos.
+\end{itemize}
+
+Además, las variables categóricas y numéricas presentan una semántica muy distinta. Generalmente, las variables categóricas no presentan un orden inherente en sus valores, a diferencia de las variables numéricas. Sin embargo, es común encontrar en ciertos conjuntos de datos variables codificadas con números enteros que actúan como códigos, pero que, desde un punto de vista semántico, se comportan como variables categóricas, ya que no presentan un orden inherente en sus valores; por ejemplo, el código \code{2} no está más cerca del \code{3} que del \code{4}. Cuando identifiquemos este tipo de variables, el primer paso en el preprocesamiento será cambiar su codificación para evitar que los modelos los interpreten como variables numéricas, que puedan llegar a tener alterar el sentido de una predicción.
+
+El caso opuesto también puede darse cuando encontramos variables categóricas que presentan un orden lineal en su significado, aunque este no esté reflejado en su valor de texto. 
+A estas variables, les asignaremos valores numéricos para capturar ese orden en el análisis.
+
+En este proyecto, encontramos una variable de tipo categórico representada por números enteros, esta es la variable objetivo \code{is\_churned}, anteriormente analizada. 
+En la primera modificación del conjunto de datos original, cambiaremos el tipo de dato de esta columna a \textit{string}, reemplazando el valor \code{1} por \code{CHURNED}, y el \code{0} por \code{NOT\_CHURNED}.
+
+El resto de variables del dataset son las siguientes:
+
+    \begin{itemize}
+        \item \code{user\_id}:
+        \item \code{gender}: De tipo categórico (\textit{string}). Genéro del usuario.
+        \item \code{age}: De tipo entero. Edad del usuario.
+        \item \code{country}: De tipo categórico (\textit{string}). País del usuario. 
+        \item \code{subscription\_type}: De tipo categórico (\textit{string}). Tipo de suscripción del usuario.
+        \item \code{listening\_time}: De tipo entero. Número de minutos por día reproduciendo, en poromedio. 
+        \item \code{songs\_played\_per\_day}: De tipo entero. Número de canciones reproducidas diariamente, en promedio.
+        \item \code{skip\_rate}: De tipo decimal (\textit{float}). Porcentaje de canciones saltadas. 
+        \item \code{device\_type}: De tipo categórico (\textit{string}). Tipo de dispositivo usado. 
+        \item \code{ads\_listened\_per\_week}: De tipo entero. Número de anuncios reproducidos por semana.
+        \item \code{offline\_listening}: De tipo entero, aunque semánticamente booleano. Uso del modo \textit{offline}. 
+    \end{itemize}
+
+% ---------------------------------------------------------------------------------------------------------- %
+
+\subsection{Exploración, visualización y preprocesado de datos}
+
+\subsubsection{Carga de datos}
+
+
+\subsubsection{Análisis de variables}
+
+
+\subsubsection{Codificación de las variables categóricas}
+
+
+\subsubsection{Normalización de las variables numéricas}
+
