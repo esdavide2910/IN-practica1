@@ -52,3 +52,16 @@
 *-SAVE-ERROR
 doc/build/
 
+# Ficheros KNIME  
+knime_workspace/**/.knimeLock
+knime_workspace/**/.project
+knime_workspace/**/.savedWithData
+knime_workspace/**/workflowset.meta
+
+# Directorios KNIME conteniendo datos de nodos 
+knime_workspace/**/internal/
+knime_workspace/**/port_*/
+knime_workspace/**/.metadata/
+knime_workspace/**/internalTables/
+
+
