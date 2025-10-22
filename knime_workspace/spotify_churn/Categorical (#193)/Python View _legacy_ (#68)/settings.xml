@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+    <entry key="node_file" type="xstring" value="settings.xml"/>
+    <config key="flow_stack"/>
+    <config key="internal_node_subsettings">
+        <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+    </config>
+    <config key="model">
+        <entry key="sourceCode" type="xstring" value="import numpy as np%%00010import pandas as pd%%00010import plotly.graph_objects as go%%00010import plotly.express as px%%00010from io import BytesIO%%00010import plotly.io as pio%%00010import kaleido%%00010%%00010# 1. Lee la tabla de datos de KNIME y conviértela a un DataFrame de pandas%%00010df = pd.DataFrame(input_table)%%00010%%00010# Función para crear el gráfico de categorías paralelas%%00010def plot_parallel_categories_knime(df, cols_name, title=None, height=900, width=1400):%%00010    &quot;&quot;&quot;%%00010    Crea un gráfico de categorías paralelas utilizando la biblioteca Plotly Express.%%00010%%00010    Parameters:%%00010        df (pd.DataFrame): DataFrame que contiene los datos.%%00010        cols_name (list): Lista de nombres de las columnas categóricas que se incluirán en el gráfico de categorías paralelas.%%00010        title (str, opcional): Título del gráfico. Si no se proporciona, se generará un título por defecto utilizando los nombres de las características.%%00010        height (int, opcional): Altura de la figura en píxeles. Valor por defecto es 800.%%00010        width (int, opcional): Ancho de la figura en píxeles. Valor por defecto es 1200.%%00010    &quot;&quot;&quot;%%00010%%00010    # Build parcats dimensions%%00010    categorical_dimensions = cols_name%%00010    dimensions = [dict(values=df[label], label=label) for label in categorical_dimensions]%%00010%%00010    # Create a colorscale based on the last column%%00010    color = np.where(df[categorical_dimensions[-1]] == &quot;NOT_CHURNED&quot;, 1, 0)  # 1 for approved, 0 for denied%%00010    colorscale = [[0, '#EB5353'], [1, '#36AE7C']]  %%00010%%00010    # Build figure as FigureWidget%%00010    fig = go.Figure(%%00010            data=[go.Parcats(%%00010                    domain={'y': [0, 0.9]}, dimensions=dimensions,%%00010                    labelfont={'size': 16}, tickfont={'size': 13},%%00010                    line={'colorscale': colorscale, 'cmin': 0, 'cmax': 1,%%00010                          'color': color, 'shape': 'hspline'},%%00010                    arrangement='freeform')%%00010                 ]%%00010          )%%00010%%00010    if title is None:%%00010        title = &quot;Categorías paralelas de las características &quot; + &quot;, &quot;.join(f&quot;{feature}&quot; for feature in cols_name)%%00010%%00010    # Update layout%%00010    fig.update_layout(%%00010        width=width, height=height,%%00010        dragmode='lasso', hovermode='closest',%%00010        margin=dict(l=200, r=200, t=70, b=60),%%00010        title=title%%00010    )%%00010%%00010    # Muestra el gráfico%%00010    return fig%%00010%%00010%%00010# 2. Define las columnas categóricas%%00010columnas_categoricas = ['gender', 'country', 'subscription_type', 'device_type', 'churned_status'] %%00010%%00010# 3. Genera el gráfico%%00010fig = plot_parallel_categories_knime(df, columnas_categoricas)%%00010%%00010# 4. Guarda el gráfico en formato SVG%%00010buffer = BytesIO()%%00010pio.write_image(fig, buffer, format='svg')%%00010output_image = buffer.getvalue()%%00010%%00010%%00010%%00010%%00010%%00010%%00010%%00010#from io import BytesIO%%00010# Only use numeric columns%%00010#data = input_table._get_numeric_data()%%00010# Replace row ID by number%%00010#data.index = range(0, len(data))%%00010# Create buffer to write into%%00010#buffer = BytesIO()%%00010# Create plot and write it into the buffer%%00010#data.plot().get_figure().savefig(buffer, format='svg')%%00010# The output is the content of the buffer%%00010#output_image = buffer.getvalue()%%00010%%00010%%00010"/>
+        <entry key="rowLimit" type="xint" value="1000"/>
+        <entry key="convertMissingToPython" type="xboolean" value="false"/>
+        <entry key="convertMissingFromPython" type="xboolean" value="false"/>
+        <entry key="sentinelOption" type="xstring" value="MIN_VAL"/>
+        <entry key="sentinelValue" type="xint" value="0"/>
+        <entry key="chunkSize" type="xint" value="500000"/>
+        <entry key="pythonVersionOption" type="xstring" value="python3"/>
+        <entry key="python2Command" type="xstring" value=""/>
+        <entry key="python3Command" type="xstring" value=""/>
+    </config>
+    <config key="nodeAnnotation">
+        <entry key="text" type="xstring" value="Parallel Categories"/>
+        <entry key="contentType" type="xstring" value="text/plain"/>
+        <entry key="bgcolor" type="xint" value="16777215"/>
+        <entry key="x-coordinate" type="xint" value="-2500"/>
+        <entry key="y-coordinate" type="xint" value="-344"/>
+        <entry key="width" type="xint" value="152"/>
+        <entry key="height" type="xint" value="18"/>
+        <entry key="alignment" type="xstring" value="CENTER"/>
+        <entry key="borderSize" type="xint" value="0"/>
+        <entry key="borderColor" type="xint" value="0"/>
+        <entry key="defFontSize" type="xint" value="-1"/>
+        <entry key="annotation-version" type="xint" value="20230412"/>
+        <config key="styles"/>
+    </config>
+    <entry key="customDescription" type="xstring" isnull="true" value=""/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="factory" type="xstring" value="org.knime.python2.nodes.view.Python2ViewNodeFactory"/>
+    <entry key="node-name" type="xstring" value="Python View (legacy)"/>
+    <entry key="node-bundle-name" type="xstring" value="KNIME Python nodes"/>
+    <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.python2.nodes"/>
+    <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-bundle-version" type="xstring" value="5.6.0.v202507151411"/>
+    <entry key="node-feature-name" type="xstring" value="KNIME Python 2 Integration (legacy)"/>
+    <entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.python2.feature.group"/>
+    <entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-feature-version" type="xstring" value="5.6.0.v202507151411"/>
+    <config key="factory_settings"/>
+    <entry key="name" type="xstring" value="Python View (legacy)"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="isInactive" type="xboolean" value="false"/>
+    <config key="ports">
+        <config key="port_1">
+            <entry key="index" type="xint" value="1"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObject"/>
+            <entry key="port_object_summary" type="xstring" value="SVG 1400 x 900"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
+        </config>
+    </config>
+    <config key="filestores">
+        <entry key="file_store_location" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="95b13efb-abfa-4e30-88a1-dd9ceb030a76"/>
+    </config>
+</config>

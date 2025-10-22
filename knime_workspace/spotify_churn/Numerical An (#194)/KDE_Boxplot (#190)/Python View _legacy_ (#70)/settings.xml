@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+    <entry key="node_file" type="xstring" value="settings.xml"/>
+    <config key="flow_stack"/>
+    <config key="internal_node_subsettings">
+        <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+    </config>
+    <config key="model">
+        <entry key="sourceCode" type="xstring" value="import numpy as np%%00010import pandas as pd%%00010import seaborn as sns%%00010import plotly.graph_objects as go%%00010import plotly.express as px%%00010from io import BytesIO%%00010import plotly.io as pio%%00010import kaleido%%00010import matplotlib.pyplot as plt%%00010%%00010# 1. Lee la tabla de datos de KNIME y conviértela a un DataFrame de pandas%%00010df = pd.DataFrame(input_table)%%00010%%00010# 2. Guarda el nombre de la columna%%00010col_name = flow_variables['variable']%%00010%%00010log_scale = 1 if flow_variables['log_scale']==1 else 0%%00010%%00010# Código de referencia: https://python-graph-gallery.com/24-histogram-with-a-boxplot-on-top-seaborn/%%00010def plot_box_kde(df, col_name, date_labels=False, height=1000, width=600, log_scale=log_scale):%%00010    &quot;&quot;&quot;%%00010    Función que grafica tanto un boxplot como una estimación de la densidad kernel (kde) para una columna de un%%00010    dataframe, con la opción de usar una escala logarítmica.%%00010%%00010    Parameters:%%00010        df (pd.DataFrame): DataFrame que contiene los datos.%%00010        col_name (str): Nombre de la columna del DataFrame para la cual se generarán los gráficos.%%00010        date_labels (datetime): Opción para mostrar las etiquetas en el eje X como fechas.%%00010        height (int, opcional): Altura de la figura en píxeles. El valor predeterminado es 1000.%%00010        width (int, opcional): Ancho de la figura en píxeles. El valor predeterminado es 600.%%00010        log_scale (bool, opcional): Si es True, se aplicará una escala logarítmica a los ejes. El valor predeterminado es False.%%00010    &quot;&quot;&quot;%%00010    # Establecemos el tema y el estilo de seaborn%%00010    sns.set_theme(style=&quot;darkgrid&quot;)%%00010%%00010    # Creamos una figura de dos subplots, uno encima del otro%%00010    f, (ax_box, ax_density) = plt.subplots(2, sharex=True,%%00010                                           gridspec_kw={&quot;height_ratios&quot;: (.20, .80)},%%00010                                           figsize=(height/100, width/100))  # Se divide entre 100 porque es el dpi por defecto en matplotlib%%00010%%00010    # Graficamos un boxplot en el primer subplot utilizando los datos de la columna col_name%%00010    sns.boxplot(df, x=col_name, orient=&quot;h&quot;, ax=ax_box)%%00010%%00010    # Graficamos una estimación de la densidad kernel (kde) en el segundo subplot utilizando los datos de la columna%%00010    # col_name%%00010    sns.kdeplot(df, x=col_name, ax=ax_density, shade=True)%%00010%%00010    # Elimina el eje X del boxplot%%00010    ax_density.set(xlabel='')%%00010%%00010    # Si se requiere escala logarítmica, se aplica%%00010    if log_scale:%%00010        ax_box.set_xscale('log')%%00010        ax_density.set_xscale('log')%%00010%%00010    # Calcular los límites de los datos%%00010    ymin, ymax = plt.ylim()%%00010%%00010    # Definir el margen como un porcentaje del rango total%%00010    margin = 0.05 * (ymax - ymin)%%00010%%00010    # Ajustar los límites con el margen%%00010    plt.ylim(ymin - margin, ymax + margin)%%00010%%00010    # Se calcula la mediana%%00010    median = df[col_name].median()%%00010%%00010    # Se señala y escribe la mediana en el boxplot%%00010    ax_box.annotate(f'Median: {median}', xy=(median, 0.2), xytext=(median, 0.7),%%00010                    arrowprops=dict(facecolor='black', shrink=0.05),%%00010                    fontsize=10, ha='center')%%00010%%00010    # Ajustamos los parámetros del subplot ax_density para que los ticks del eje x sean visibles%%00010    ax_density.tick_params(axis='x', which='both', bottom=True)%%00010%%00010    # Si se quieren interpretar los datos como fechas%%00010    if date_labels is True:%%00010%%00010        # Crear un DataFrame con los años%%00010        df_dates = pd.DataFrame(df[col_name], columns=['date'])%%00010%%00010        # Convertir las fechas a valores ordinales%%00010        df_dates['ordinal'] = [x.toordinal() for x in df_dates['date']]%%00010%%00010    # Añadir título a la gráfica%%00010    f.suptitle(f'Gráfico de densidad y caja de la característica \'{col_name}\'')%%00010%%00010    return f%%00010%%00010    %%00010%%00010# 3. Genera el gráfico%%00010fig = plot_box_kde(df, col_name)%%00010%%00010# 4. Crea el buffer en memoria%%00010buffer = BytesIO()%%00010%%00010# 5. Guarda el gráfico en el buffer en formato SVG%%00010fig.savefig(buffer, format='svg')%%00010%%00010# 6. Obtiene el contenido del buffer como un valor de bytes%%00010output_image = buffer.getvalue()%%00010"/>
+        <entry key="rowLimit" type="xint" value="1000"/>
+        <entry key="convertMissingToPython" type="xboolean" value="false"/>
+        <entry key="convertMissingFromPython" type="xboolean" value="false"/>
+        <entry key="sentinelOption" type="xstring" value="MIN_VAL"/>
+        <entry key="sentinelValue" type="xint" value="0"/>
+        <entry key="chunkSize" type="xint" value="500000"/>
+        <entry key="pythonVersionOption" type="xstring" value="python3"/>
+        <entry key="python2Command" type="xstring" value=""/>
+        <entry key="python3Command" type="xstring" value=""/>
+    </config>
+    <config key="nodeAnnotation">
+        <entry key="text" type="xstring" value="Box&amp;KDE Plot"/>
+        <entry key="contentType" type="xstring" value="text/plain"/>
+        <entry key="bgcolor" type="xint" value="16777215"/>
+        <entry key="x-coordinate" type="xint" value="-2620"/>
+        <entry key="y-coordinate" type="xint" value="81"/>
+        <entry key="width" type="xint" value="152"/>
+        <entry key="height" type="xint" value="18"/>
+        <entry key="alignment" type="xstring" value="CENTER"/>
+        <entry key="borderSize" type="xint" value="0"/>
+        <entry key="borderColor" type="xint" value="0"/>
+        <entry key="defFontSize" type="xint" value="-1"/>
+        <entry key="annotation-version" type="xint" value="20230412"/>
+        <config key="styles"/>
+    </config>
+    <entry key="customDescription" type="xstring" isnull="true" value=""/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="factory" type="xstring" value="org.knime.python2.nodes.view.Python2ViewNodeFactory"/>
+    <entry key="node-name" type="xstring" value="Python View (legacy)"/>
+    <entry key="node-bundle-name" type="xstring" value="KNIME Python nodes"/>
+    <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.python2.nodes"/>
+    <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-bundle-version" type="xstring" value="5.6.0.v202507151411"/>
+    <entry key="node-feature-name" type="xstring" value="KNIME Python 2 Integration (legacy)"/>
+    <entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.python2.feature.group"/>
+    <entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-feature-version" type="xstring" value="5.6.0.v202507151411"/>
+    <config key="factory_settings"/>
+    <entry key="name" type="xstring" value="Python View (legacy)"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="isInactive" type="xboolean" value="false"/>
+    <config key="ports">
+        <config key="port_1">
+            <entry key="index" type="xint" value="1"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObject"/>
+            <entry key="port_object_summary" type="xstring" value="SVG 960 x 576"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
+        </config>
+    </config>
+    <config key="filestores">
+        <entry key="file_store_location" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="6a71bab9-cb95-4a38-b291-763b1ce35025"/>
+    </config>
+</config>
