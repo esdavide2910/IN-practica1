@@ -60,32 +60,33 @@ El resto de variables del dataset son las siguientes:
 
 \subsubsection{Carga de datos}
 
-La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>.
+La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>. En la Figura \ref{fig:spotify_churn_CSV_reader} vemos que el conjunto de datos tiene 8 000 instancias, cada con 12 características y su etiqueta ---que es como se denomina al valor real de la variable \textit{target} en cada instancia---.
 
 \begin{figure}[h!]
-    \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_CSV_Reader.png}}
+    \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_CSV_reader.png}}
     \caption{
-        Visualización de los datos crudos (\textit{raw data}, en inglés) del primer problema
+        Visualización de los datos crudos (\textit{raw data}, en inglés) del primer problema.
+        Obtenido del nodo <<CSV Reader>>. 
     }
-    \label{fig:spotify_churn_CSVReader_RawData}
+    \label{fig:spotify_churn_CSV_reader}
 \end{figure}
-
-En la Figura \ref{fig:spotify_churn_CSVReader_RawData} vemos que el conjunto de datos tiene 8 000 instancias, cada con 12 características y su etiqueta ---que es como se denomina al valor real de la variable \textit{target} en cada instancia---.
 
 En las siguientes subsecciones limpiaremos y prepararemos los datos, para facilitar su interpretación y exploración inicial. Y es que, muchas veces, los datos pueden estar incompletos, contener valores atípicos o estar en formatos difíciles de analizar directamente. Posteriormente, realizaremos ajustes específicos en función de los requisitos de cada modelo.
 
 \subsubsection{Análisis de variables}
 
-Ahora realizaremos un pequeño análisis tanto de las características como de la variable objetivo. Comenzaremos utilizando el nodo <<Data Explorer>> de la extensión \textit{KNIME JavaScript Views (Labs)}.
+Ahora realizaremos un pequeño análisis tanto de las características como de la variable objetivo. Comenzaremos utilizando el nodo <<Data Explorer>> de la extensión \textit{KNIME JavaScript Views (Labs)}, tanto para las variables categóricas como las numéricas.
 
 \paragraph*{Variables categóricas.}
 
-La variable objetivo ha sido convertida a una variable categórica (\code{churned\_status}), para poder analizarse como tal. En la Figura \ref{fig:spotify_churn_Statistics_Nominal_Attributes} podemos ver los resultados del análisis exploratorio sobre cada variable categórica. 
+La variable objetivo ha sido convertida a una variable categórica (\code{churned\_status}), para poder analizarse como tal. En la Figura \ref{fig:spotify_churn_statistics_categorical_variables} podemos ver los resultados del análisis exploratorio sobre cada variable categórica. 
 
 \begin{figure}[h!]
-    \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_statistical_nominal_attributes.png}}
-    \caption{Visualización del análisis exploratorio de variables categóricas.}
-    \label{fig:spotify_churn_Statistics_Nominal_Attributes}
+    \centering
+    \fbox{\includegraphics[width=0.85\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_statistics_categorical_variables.png}}
+    \caption{Visualización del análisis exploratorio de variables categóricas. 
+    Obtenido del nodo <<Data Explorer>> de la extensión \textit{KNIME JavaScript Views (Labs)}.}
+    \label{fig:spotify_churn_statistics_categorical_variables}
 \end{figure}
 
 Analicemos la información extraída de este reporte:
@@ -103,25 +104,33 @@ Analicemos la información extraída de este reporte:
 
 En todas las características comprobamos que las diversas categorías están muy equilibradas. La mayor diferencia de ocurrencias entre dos categorías de cada variable son de apenas un 0.5\% en \code{gender}, 1\% en \code{country}, 2.4\% en \code{subscription\_type} y 2.3\% en \code{device\_type}. La variable objetivo sí presenta dos clases desbalanceadas: un 74\% de las instancias son de usuarios que no han cancelado su cuenta, dejando solo un 26\% de las instancias positivas. 
 
-¿Cómo se relacionan entre ellas? En la Figura \ref{fig:churn_spotify_ParallelCategories_NominalAttributes} se muestra cómo se corresponden estas variables categóricas en sus distintos valores con las clases de la variable objetivo mediante un gráfico de Categorías Paralelas. Este gráfico es súmamente útil, ya que nos permite ver qué proporción de cada valor hay por cada variable categórica, identificar combinaciones más comunes entre categorías, así como ver la proporción de préstamos aprobados o denegados por cada uno de esos valores. En la gráfica se observa que existe prácticamente la misma proporción de usuarios dentro de cada grupo que cancela la cuenta, es decir, el \textit{churn} se distribuye de manera uniforme entre las diferentes categorías analizadas, sin que ninguna combinación particular de atributos nominales muestre una predisposición significativamente mayor a la cancelación del servicio. Esto sugiere que estas variables categóricas por sí solas no son predictores fuertes de la cancelación.
+¿Cómo se relacionan entre ellas? En la Figura \ref{fig:churn_spotify_parallelcategories_categorical_attributes} se muestra cómo se corresponden estas variables categóricas en sus distintos valores con las clases de la variable objetivo mediante un gráfico de Categorías Paralelas. Este gráfico es súmamente útil, ya que nos permite ver qué proporción de cada valor hay por cada variable categórica, identificar combinaciones más comunes entre categorías, así como ver la proporción de préstamos aprobados o denegados por cada uno de esos valores. En la gráfica se observa que existe prácticamente la misma proporción de usuarios dentro de cada grupo que cancela la cuenta, es decir, el \textit{churn} se distribuye de manera uniforme entre las diferentes categorías analizadas, sin que ninguna combinación particular de atributos categóricos muestre una predisposición significativamente mayor a la cancelación del servicio. Esto sugiere que estas variables categóricas por sí solas no son predictores fuertes de la cancelación.
 
 \begin{figure}[h!]
-    \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_ParallelCategories_NominalAttributes.png}}
+    \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_parallelcategories_categorical_variables.png}}
     \caption{Visualización de categorías paralelas en las variables categóricas.}
-    \label{fig:churn_spotify_ParallelCategories_NominalAttributes}
+    \label{fig:churn_spotify_parallelcategories_categorical_attributes}
 \end{figure} 
 
-Esto coincide con el análisis estadístico presentado en la Figura \ref{}, en el que en ningún caso se puede rechazar ---con un 95\% de confianza--- la hipótesis nula de independencia entre variables categóricas (\textit{p-values} superiores al 5\%), ya sea entre atributos o entre cada atributo y la variable objetivo.
-
 \begin{tcolorbox}
-    [colback=gray!5!white, colframe=gray!60!black, title=Correlación entre dos variables categóricas]
+    [colback=gray!5!white, colframe=gray!60!black, title=Asociación entre dos variables categóricas, breakable]
 
-    Se emplea Test Chi Cuadrado...  
-    Cuando se rechaza la hipótesis nula (\textit{p-value}$<0.05$) y, por tanto, que las variables sean independientes, el Test V de Cramer permite medir el impacto de la asociación entre ambas variables.
+    Cuando las variables son categóricas, no se puede calcular una correlación tradicional (como la de Pearson). En su lugar, se mide la asociación mediant el test chi-cuadrado para evaluar si existen dependencia estadística entre las categorías, y luego se normaliza con el V de Cramer para obtener una medida comparable entre 0 y 1.
 
 \end{tcolorbox}
 
-El análisis de ... 
+Esto coincide con el análisis de asociación presentado en la Figura \ref{fig:churn_spotify_corrmatrix_categorical}, en el que se muestran unos valores de asociación entre variables prácticamente nulos, tanto entre atributos como entre estos con la variable objetivo.
+
+\begin{figure}[h!]
+    \centering
+    \fbox{\includegraphics[width=0.8\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_corrmatrix_categorical.png}}
+    \caption{
+        Matriz de correlación (basada en el valor chi-cuadrado de Pearson, normalizado mediante el coeficiente V de Cramer) entre variables categóricas. Obtenido de un componente creado propio, <<Correlation Matrix>>, que calcula las correlaciones entre cada par de variables (mediante el nodo <<Linear Correlation>>) y las plasma en un mapa de calor.
+    }
+    \label{fig:churn_spotify_corrmatrix_categorical}
+\end{figure} 
+
+
 
 
 \paragraph*{Variables numéricas.}
@@ -129,56 +138,121 @@ El análisis de ...
 %Primero, analizamos cada variable numérica individualmente. ¿Qué valores abarca? ¿Media/Mediana?
 % Comentar la variable offline_listening que es binaria
 
+En la Figura \ref{fig:churn_spotify_statistical_numerical_variables} tenemos un cuadro resumen de las estadísticas principales de las variables numéricas. Algunas conclusiones que podemos obtener de este son: 
 
-%Segundo, ¿cómo se correlacionan unas con otras?
-En la Figura \ref{} podemos ver una matriz de correlación entre las variables numéricas. Las únicas correlaciones significativas la encontramos entre \code{offline\_listening} y \code{ads\_listened\_per\_week}, que se correlacionan inversamente, cosa que tiene sentido porque solo pueden usar el modo \textit{offline} aquellos usuarios con cuenta \textit{premium} (ya sea la básica, familiar o de estudiante), que son los usuarios a los que no se les reproduce anuncios.
+\begin{itemize}
 
-\begin{tcolorbox}
-    [colback=gray!5!white, colframe=gray!60!black, title=Medida de asociación]
-
-    Para analizar la asociación entre una variable numérica y una variable categórica se realiza comparación de distribuciones de la variable numérica entre los diferentes grupos definidos por la variable categórica.
-
-    Hay varias pruebas estadísticas:
-    \begin{itemize}
-        \item \textbf{Pruebas paramétricas}: Estas pruebas asumen que la variable numérica sigue una distribución específica (generalmente la normal).
-        
-        Las siguientes pruebas asumen que la variable numérica sigue una distribución normal en cada grupo y que las varianzas de los grupos son aproximadamente iguales (homocedasticidad).
-
-        \begin{itemize}
-            \item Prueba $t$ de Student: Para dos grupos. ...
-            \item Análisis de varianza (ANOVA): Para tres o más grupos. ...
-        \end{itemize}
-
-        También encontramos pruebas diseñadas para casos en los que la variable numérica presenta normalidad pero no homocedasticidad:
-
-        \begin{itemize}
-            \item Prueba $t$ de Welch: Para dos grupos. ...
-            \item Pruba Welch ANOVA: Para tres o más grupos. ...
-        \end{itemize}
-        
-        \item \textbf{Pruebas no parámetricas}: Estas pruebas se utilizan en casos en los que las variables no se ajustan a modelos teóricos. Estas pruebas son menos efectivas que las parámetricas para distribuciones normales, pero en los casos en los que no se cumplen los supuestos paramétricos (como normalidad), son más robustas y fiables. Se basan en los rangos de los datos.
-        
-        Algunas de estas pruebas son:
-        
-        \begin{itemize}
-            \item Prueba $U$ de Mann-Whitney: Alternativa a la prueba $t$ de Student que compara las medianas o distribuciones de los rangos de dos grupos independientes.
-            \item Prueba de Kruskal-Wallis: Alternativa al ANOVA que compara las medianas o distribuciones de los rangos de tres o más grupos independientes.
-        \end{itemize}
-        
-        Cuando se comparan tres o más grupos, si la prueba ANOVA, Welch ANOVA o de Kruskal-Wallis resulta significativa, generalmente se requieren pruebas \textit{post-hoc} (como la prueba de Tukey para ANOVA, prueba \textit{post-hoc} de Games-Howell comparaciones por pares de Mann-Whitney con corrección de Bonferroni) para determinar cuáles grupos difieren entre sí.
-        
-    \end{itemize}
+    \item No hay valores faltantes en ninguna de las variables.
     
-\end{tcolorbox}
+    \item Los valores numéricos se distribuyen de manera muy homogénea en las variables \code{age}, \code{listening\_time}, \code{songs\_played\_per\_day} y \code{skip\_rate}, por lo que los valores están bien dispersos a lo largo de sus rangos respectivos y no hay valores anómalos.
+    
+    \item La variable \code{ads\_listened\_per\_week} tiene la mayoría de los valores (5982 instancias) cero, dado que la mayoría de cuentas tienen algún plan \textit{premium} y no tienen anuncios. El resto de instancias están diseminadas entre los 1 y 49 anuncios de manera residual.
+    
+    \item La variable \code{office\_listening}, como veníamos anticipando antes, es realmente binaria, por lo que solo tiene valores 0 y 1, y hay muchos más valores positivos que nulos, por la misma razón: todos los usuarios \textit{premium} tienen acceso al modo \textit{offline}. De hecho, si se suman las instancias con valor nulo de \code{ads\_listened\_per\_week} y \code{office\_listening} da 8 000 instancias, que es el total, lo que indica que estas dos variables están completamente alineadas: los usuarios que no escuchan anuncios son exactamente los que pueden usar el modo \textit{offline}, y viceversa.
 
-%¿Cómo se relacionan las variables con la variable objetivo?
+\end{itemize}
+
+
+\begin{figure}[h!]
+    \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_statistics_numerical_variables.png}}
+    \caption{
+        Visualización del análisis exploratorio de variables numéricas.
+        Obtenido del nodo <<Data Explorer>> de la extensión \textit{KNIME JavaScript Views (Labs)}.
+    }
+    \label{fig:churn_spotify_statistical_numerical_variables}
+\end{figure} 
+
+
+Para comprobar si se relacionan entre sí las variables numéricas, nos apoyaremos de la matriz de correlación de la Figura \ref{fig:churn_spotify_corrmatrix_numerical}. Como se puede observar, las únicas correlaciones significativas la encontramos entre \code{offline\_listening} y \code{ads\_listened\_per\_week}, que se correlacionan inversamente, como veníamos indicando anteriormente. La correlación no es de $-1$ exacto, ya que la variable \code{offline\_listening} es binaria y no captura completamente la variabilidad del número de anuncios escuchados, además de que pueden existir otros factores que influyan en el número de anuncios mostrados.
+
+\begin{figure}[h!]
+    \centering
+    \fbox{\includegraphics[width=0.8\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_corrmatrix_numerical.png}}
+    \caption{
+        Matriz de correlación entre variables numéricas (basada en el coeficiente de correlación de Pearson). 
+        Obtenido de un componente creado propio, <<Correlation Matrix>>, que calcula las correlaciones entre cada par de variables (mediante el nodo <<Linear Correlation>>) y las plasma en un mapa de calor. 
+    }
+    \label{fig:churn_spotify_corrmatrix_numerical}
+\end{figure} 
+
+
+% \begin{tcolorbox}
+%     [colback=gray!5!white, colframe=gray!60!black, title=Medida de asociación, breakable]
+
+%     Para analizar la asociación entre una variable numérica y una variable categórica se realiza comparación de distribuciones de la variable numérica entre los diferentes grupos definidos por la variable categórica.
+
+%     Hay varias pruebas estadísticas:
+%     \begin{itemize}
+%         \item \textbf{Pruebas paramétricas}: Estas pruebas asumen que la variable numérica sigue una distribución específica (generalmente la normal).
+        
+%         Las siguientes pruebas asumen que la variable numérica sigue una distribución normal en cada grupo y que las varianzas de los grupos son aproximadamente iguales (homocedasticidad).
+
+%         \begin{itemize}
+%             \item Prueba $t$ de Student: Para dos grupos. ...
+%             \item Análisis de varianza (ANOVA): Para tres o más grupos. ...
+%         \end{itemize}
+
+%         También encontramos pruebas diseñadas para casos en los que la variable numérica presenta normalidad pero no homocedasticidad:
+
+%         \begin{itemize}
+%             \item Prueba $t$ de Welch: Para dos grupos. ...
+%             \item Pruba Welch ANOVA: Para tres o más grupos. ...
+%         \end{itemize}
+        
+%         \item \textbf{Pruebas no parámetricas}: Estas pruebas se utilizan en casos en los que las variables no se ajustan a modelos teóricos. Estas pruebas son menos efectivas que las parámetricas para distribuciones normales, pero en los casos en los que no se cumplen los supuestos paramétricos (como normalidad), son más robustas y fiables. Se basan en los rangos de los datos.
+        
+%         Algunas de estas pruebas son:
+        
+%         \begin{itemize}
+%             \item Prueba $U$ de Wilcoxon-Mann-Whitney: Alternativa a la prueba $t$ de Student que compara las medianas o distribuciones de los rangos de dos grupos independientes.
+%             \item Prueba de Kruskal-Wallis: Alternativa al ANOVA que compara las medianas o distribuciones de los rangos de tres o más grupos independientes.
+%         \end{itemize}
+        
+%         Cuando se comparan tres o más grupos, si la prueba ANOVA, Welch ANOVA o de Kruskal-Wallis resulta significativa, generalmente se requieren pruebas \textit{post-hoc} (como la prueba de Tukey para ANOVA, prueba \textit{post-hoc} de Games-Howell comparaciones por pares de Mann-Whitney con corrección de Bonferroni) para determinar cuáles grupos difieren entre sí.
+        
+%     \end{itemize}
+    
+% \end{tcolorbox}
+
+Por último, en la Figura \ref{fig:churn_spotify_U_Wilcoxon-Mann-Whitney_numerical} analizamos cómo se relacionan estas variables numéricas con la variable objetivo (categórica). Para ello, comparamos la distribución de las instancias pertenecientes a cada categoría de la variable objetivo mediante la prueba $U$ de Wilcoxon-Mann-Whitney. Se ha escogido esta prueba no paramétrica ya que la distribución de las variables en ningún caso parece normal: las variables \code{age}, \code{listening\_time}, \code{songs\_played\_per\_day} y \code{skip\_rate} parecen tener una distribución uniforme; \code{ads\_listened\_per\_week} un conteo disperso, en el que la mayoría de valores son cero y el resto están dispersos entre 1 y 49; y \code{offline\_listening} es una variable binaria, que obviamente solo presenta valores 0 y 1. Se observa que ---para un 95\%--- en ningún caso se puede rechazar que las instancias de ambas categorías presenten la misma distrución (\textit{p-value} $> 0.05$).
+
+\begin{figure}[h!]
+    \centering
+    \fbox{\includegraphics[width=\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_mann_whitney_numerical.png}}
+    \caption{
+        Prueba $U$ de Wilcoxon-Mann-Whitney ...
+    }
+    \label{fig:churn_spotify_U_Wilcoxon-Mann-Whitney_numerical}
+\end{figure} 
 
 
 
 
 
-\subsubsection{Codificación de las variables categóricas}
+
+\subsubsection{Codificación de los atributos categóricos}
+
+Se propone la codificación \textit{One-Hot} para los atributos categóricos. Esta técnica de codificación transforma las variables categóricas en un formato binario donde cada valor único se transforma en una columna binaria (0 o 1), donde una columna indica la presencia del valor de la categoría en un registro determinado.
+
+De esta forma, las variables categóricas se convierten en numéricas sin una pérdida relevante de información. El principal inconveniente de esta técnica es el aumento de la dimensionalidad del conjunto de datos, especialmente cuando las variables poseen un número elevado de categorías.
+
+En este caso particular, las 4 columnas originales se expanden a 18. No obstante, este incremento de dimensionalidad no supone un impacto considerable en la complejidad computacional del modelo, como se verá más adelante.
 
 
 \subsubsection{Normalización de las variables numéricas}
+
+Finalmente, se normalizará con Z-\textit{Score} todas las variables. Esta normalización, también conocidad como estandarización, reescala los valores de cada variable de manera que tengan una media igual a 0 y una desviación estándar igual a 1. 
+
+Para un valor $x_i$ de una variable $X$, el Z-\textit{Score} se calcula como:
+
+$$
+z_i = \frac{x_i-\mu}{\sigma}
+$$
+
+donde:
+\begin{itemize}
+    \item $\mu$ es la media de la variable $X$
+    \item $\sigma$ es la desviación estándar de $X$
+\end{itemize}
+
 

@@ -17,6 +17,7 @@
 \usepackage[utf8]{inputenc} 
 % Idioma del documento
 \usepackage[spanish]{babel}
+\decimalpoint % Punto como separador decimal
 % Definición y uso de colores
 \usepackage{xcolor}
 
@@ -24,7 +25,7 @@
 % Paquetes adicionales
 % --------------------------------------
 % Cajas de color y resaltado de texto
-\usepackage{tcolorbox}
+\usepackage[breakable]{tcolorbox}
 % Marcos personalizables con TikZ
 \usepackage[framemethod=TikZ]{mdframed}
 % Permite romper URLs muy largas automáticamente
@@ -39,6 +40,8 @@
 \definecolor{lightgray}{gray}{0.9}
 \sethlcolor{lightgray}
 \newcommand{\code}[1]{\hl{\texttt{#1}}}
+% \newcommand{\code}[1]{\hl{\url{#1}}}
+
 
 % --------------------------------------
 % Citaciones

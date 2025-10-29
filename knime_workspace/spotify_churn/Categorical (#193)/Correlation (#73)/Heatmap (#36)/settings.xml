@@ -13,11 +13,11 @@
         <entry key="horizontalColumnV3" type="xstring" value="First column name"/>
         <entry key="verticalColumnV3" type="xstring" value="Second column name"/>
         <entry key="aggregationMethod" type="xstring" value="NONE"/>
-        <entry key="valueColumnV3" type="xstring" value="p value"/>
+        <entry key="valueColumnV3" type="xstring" value="Correlation value"/>
     </config>
     <config key="variables"/>
     <config key="view">
-        <entry key="title" type="xstring" value="Correlation Matrix (between numerical variables)"/>
+        <entry key="title" type="xstring" value="Correlation Matrix (between categorical variables)"/>
         <entry key="axisExtentMethod" type="xstring" value="COLUMN_DOMAIN"/>
         <config key="manualAxisLimits">
             <entry key="xAxisManualMin" type="xdouble" value="0.0"/>
@@ -75,6 +75,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="48360550-59d6-4403-bad3-63b3133f1839"/>
+        <entry key="file_store_id" type="xstring" value="ac022335-3394-4ff1-8eee-c523a745aa05"/>
     </config>
 </config>
