@@ -17,6 +17,21 @@
             <entry key="class" type="xstring" value="STRING"/>
             <entry key="value" type="xstring" value="age"/>
         </config>
+        <config key="Loop_Execute_3">
+            <entry key="type" type="xstring" value="loopcontext_execute"/>
+        </config>
+        <config key="Variable_4">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="currentColumnName"/>
+            <entry key="class" type="xstring" value="STRING"/>
+            <entry key="value" type="xstring" value="offline_listening"/>
+        </config>
+        <config key="Variable_5">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="currentIteration"/>
+            <entry key="class" type="xstring" value="INTEGER"/>
+            <entry key="value" type="xint" value="5"/>
+        </config>
     </config>
     <config key="internal_node_subsettings">
         <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
@@ -66,7 +81,7 @@
         <entry key="no_columns_policy" type="xboolean" value="false"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
     <entry key="factory" type="xstring" value="org.knime.base.node.meta.looper.columnlist2.ColumnListLoopStartNodeFactory"/>
     <entry key="node-name" type="xstring" value="Column List Loop Start"/>
     <entry key="node-bundle-name" type="xstring" value="KNIME Base Nodes"/>
@@ -79,16 +94,19 @@
     <entry key="node-feature-version" type="xstring" value="5.8.0.v202510021208"/>
     <config key="factory_settings"/>
     <entry key="name" type="xstring" value="Column List Loop Start"/>
-    <entry key="hasContent" type="xboolean" value="false"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
         <config key="port_1">
             <entry key="index" type="xint" value="1"/>
-            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.data.DataTableSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.BufferedDataTable"/>
+            <entry key="port_object_summary" type="xstring" value="Rows: 8000, Cols: 1"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
         </config>
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="d54124d6-3505-450c-8cc3-cf33b834e23f"/>
     </config>
 </config>

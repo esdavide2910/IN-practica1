@@ -1,12 +1,16 @@
 \section{Churn de usuarios en Spotify}
 
 % ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
 
 \subsection{Descripción del proyecto}
 
 \subsubsection{Objetivo}
 
 El objetivo es predecir la pérdida de usuarios (\textit{churn} en inglés) en función de datos personales de los usuarios y de su interacción con el servicio. Las conclusiones de este análisis intentan ayudar en la toma de decisiones de la empresa para reducir el número de cancelaciones.
+
+% ---------------------------------------------------------------------------------------------------------- %
 
 \subsubsection{Datos}
 
@@ -55,6 +59,8 @@ El resto de variables del dataset son las siguientes:
     \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
 
 \subsection{Exploración, visualización y preprocesado de datos}
 
@@ -72,6 +78,8 @@ La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>. En la Fig
 \end{figure}
 
 En las siguientes subsecciones limpiaremos y prepararemos los datos, para facilitar su interpretación y exploración inicial. Y es que, muchas veces, los datos pueden estar incompletos, contener valores atípicos o estar en formatos difíciles de analizar directamente. Posteriormente, realizaremos ajustes específicos en función de los requisitos de cada modelo.
+
+% ---------------------------------------------------------------------------------------------------------- %
 
 \subsubsection{Análisis de variables}
 
@@ -130,8 +138,7 @@ Esto coincide con el análisis de asociación presentado en la Figura \ref{fig:c
     \label{fig:churn_spotify_corrmatrix_categorical}
 \end{figure} 
 
-
-
+% ---------------------------------------------------------------------------------------------------------- %
 
 \paragraph*{Variables numéricas.}
 
@@ -214,34 +221,32 @@ Para comprobar si se relacionan entre sí las variables numéricas, nos apoyarem
     
 % \end{tcolorbox}
 
-Por último, en la Figura \ref{fig:churn_spotify_U_Wilcoxon-Mann-Whitney_numerical} analizamos cómo se relacionan estas variables numéricas con la variable objetivo (categórica). Para ello, comparamos la distribución de las instancias pertenecientes a cada categoría de la variable objetivo mediante la prueba $U$ de Wilcoxon-Mann-Whitney. Se ha escogido esta prueba no paramétrica ya que la distribución de las variables en ningún caso parece normal: las variables \code{age}, \code{listening\_time}, \code{songs\_played\_per\_day} y \code{skip\_rate} parecen tener una distribución uniforme; \code{ads\_listened\_per\_week} un conteo disperso, en el que la mayoría de valores son cero y el resto están dispersos entre 1 y 49; y \code{offline\_listening} es una variable binaria, que obviamente solo presenta valores 0 y 1. Se observa que ---para un 95\%--- en ningún caso se puede rechazar que las instancias de ambas categorías presenten la misma distrución (\textit{p-value} $> 0.05$).
+Por último, en la Figura \ref{fig:churn_spotify_U_Wilcoxon-Mann-Whitney_numerical} analizamos cómo se relacionan estas variables numéricas con la variable objetivo (categórica). Para ello, comparamos la distribución de las instancias pertenecientes a cada categoría de la variable objetivo mediante la prueba $U$ de Wilcoxon-Mann-Whitney. Se ha escogido esta prueba no paramétrica ya que la distribución de las variables en ningún caso parece normal: las variables \code{age}, \code{listening\_time}, \code{songs\_played\_per\_day} y \code{skip\_rate} parecen tener una distribución uniforme; \code{ads\_listened\_per\_week} un conteo disperso, en el que la mayoría de valores son cero y el resto están dispersos entre 1 y 49; y \code{offline\_listening} es una variable binaria, que obviamente solo presenta valores 0 y 1. Se observa que ---para un nivel de confianza del 95\%--- en ningún caso se puede rechazar que las instancias de ambas categorías presenten la misma distrución (\textit{p-value} $> 0.05$). Por tanto, estos atributos \textit{per se} tampoco parecen ayudar a disinguir la clase. 
 
 \begin{figure}[h!]
     \centering
     \fbox{\includegraphics[width=\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_mann_whitney_numerical.png}}
     \caption{
-        Prueba $U$ de Wilcoxon-Mann-Whitney ...
+        Prueba $U$ de Wilcoxon-Mann-Whitney aplicada sobre los valores de los atributos numéricos pertenecientes a las instancias de cada categoría. 
     }
     \label{fig:churn_spotify_U_Wilcoxon-Mann-Whitney_numerical}
 \end{figure} 
 
-
-
-
-
+% ---------------------------------------------------------------------------------------------------------- %
 
 \subsubsection{Codificación de los atributos categóricos}
 
-Se propone la codificación \textit{One-Hot} para los atributos categóricos. Esta técnica de codificación transforma las variables categóricas en un formato binario donde cada valor único se transforma en una columna binaria (0 o 1), donde una columna indica la presencia del valor de la categoría en un registro determinado.
+Se propone la codificación \textbf{\textit{One-Hot}} para los atributos categóricos. Esta técnica de codificación transforma las variables categóricas en un formato binario donde cada valor único se transforma en una columna binaria (0 o 1), donde una columna indica la presencia del valor de la categoría en un registro determinado.
 
 De esta forma, las variables categóricas se convierten en numéricas sin una pérdida relevante de información. El principal inconveniente de esta técnica es el aumento de la dimensionalidad del conjunto de datos, especialmente cuando las variables poseen un número elevado de categorías.
 
 En este caso particular, las 4 columnas originales se expanden a 18. No obstante, este incremento de dimensionalidad no supone un impacto considerable en la complejidad computacional del modelo, como se verá más adelante.
 
+% ---------------------------------------------------------------------------------------------------------- %
 
 \subsubsection{Normalización de las variables numéricas}
 
-Finalmente, se normalizará con Z-\textit{Score} todas las variables. Esta normalización, también conocidad como estandarización, reescala los valores de cada variable de manera que tengan una media igual a 0 y una desviación estándar igual a 1. 
+Finalmente, aplicará normalización \textbf{Z-\textit{Score} o estandarización} sobre todas las variables. Esta normalización reescala los valores de cada variable de manera que tengan una media igual a 0 y una desviación estándar igual a 1. 
 
 Para un valor $x_i$ de una variable $X$, el Z-\textit{Score} se calcula como:
 
@@ -254,5 +259,225 @@ donde:
     \item $\mu$ es la media de la variable $X$
     \item $\sigma$ es la desviación estándar de $X$
 \end{itemize}
+
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+
+\subsection{Definición del protocolo de validación experimental}
+
+A continuación, procederemos a entrenar y evaluar distintos modelos de \textit{machine learning} para los datos del problema, seleccionando finalmente el modelo con el mejor rendimiento. Es fundamental evitar el \textit{data snooping} durante este proceso, para asegurar que la evaluación refleja un rendimiento realista y generalizable.
+
+El \textit{\textbf{data snooping}} ocurre cuando la información de los datos de test dirige el entrenamiento del modelo, es decir, cuando usamos repetidamente los datos de test para tomar decisiones sobre el modelo, como escoger hiperparámetros, seleccionar el mejor modelo de varios probados, o ajustar variables. Como resultado,el modelo se ajusta no solo a los datos de entrenamiento, sino también a las particularidades de los datos de test, llevando a una posible generalización deficiente.
+
+Esta mala práctica podemos evitarla siguiendo un enfoque riguroso en la gestión de los conjuntos de datos.Para lograrlo deberemos:
+
+\begin{itemize}
+
+    \item \textbf{Dividir los datos en conjuntos de entrenamiento, validación y test}: El conjunto de entrenamiento se utiliza para ajustar los parámetros del modelo; el conjunto de validación sirve para la selección de hiperparámetros y la comparación de modelos; y el conjunto de test solo se usa al final, exclusivamente para evaluar el rendimiento del modelo elegido. De esta manera, los datos de test no influyen en ninguna decisión de desarrollo.
+
+    \item \textbf{Aplicar validación cruzada}: Esta técnica permite obtener una evaluación más robusta y confiable del rendimiento del modelo utilizando solo los datos de entrenamiento y validación. Al realizar múltiples divisiones de los datos de entrenamiento, la validación cruzada ayuda a reducir la dependencia de un solo conjunto de validación, minimizando el riesgo de sobreajuste.
+
+    Una implementación de validación cruzada es el \textit{k-fold}, en la que el conjunto de datos se divide en $k$ partes (o \textit{folds}) de tamaño similar. El modelo se entrena $k$ veces, usando en cada iteración $k-1$ pliegues para entrenar y el pliegue restante para validar. 
+
+    En este problema, dado que tenemos un gran número de instancias, utilizaré $k=5$ para la validación cuzada.
+    
+    \item \textbf{Evitar la revisión o análisis del conjunto de test}: Es crucial no utilizar los datos de test para hacer ajustes adicionales en el modelo. El conjunto de test debe mantenerse separado y solo emplearse para la evaluación final del modelo, después de haber tomado todas las decisiones de desarrollo.
+    
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+
+\subsection{Entrenamiento de los modelos}
+
+\subsubsection{Modelos escogidos para la comparación}
+
+Se han escogido los siguientes modelos el entrenamiento:
+
+\begin{enumerate}
+
+    \item \textbf{Modelo \textit{k}-nearest neighbors (\textit{k}-NN)}: Este modelo clasifica una instancia en función de las $k$ instancias etiquetadas más cercanas en un espacio de $n$ dimensiones (donde $n$ representa el número de características). La cercanía entre instancias se determina a través de una función de distancia, que puede ser adaptada para manejar distancias incluso entre valores categóricos (de haberlos, porque en nuestro caso los hemos convertido todos a numéricos), o asignar pesos diferentes a ciertas características en función de su importancia.
+    
+    También se puede obtener la clasificación ponderando por la distancia a cada una de las instancias más cercanas, lo que significa que las instancias más cercanas tienen mayor influencia en la predicción que las más lejanas.
+
+    Sin embargo, en su versión básica, el modelo trabaja principalmente con variables numéricas, utiliza la distancia Euclidiana entre instancias y requiere normalizar previamente las variables. La normalización es esencial para evitar que características con escalas mayores dominen la distancia, garantizando así que cada variable contribuya de manera equitativa en el cálculo de la cercanía.
+
+    Tiene como principal ventaja que es un modelo bastante intuitivo de entender, y es medianamente explicable ---ya que la predicción se realiza en base a casos similares de los que sí conocemos la clase---. Sin embargo, una desventaja importante del modelo es que puede resultar costoso computacionalmente y lento, ya que para predecir en conjuntos de datos grandes necesita calcular la distancia entre la nueva instancia y todas las instancias etiquetadas en el conjunto de entrenamiento. 
+
+    % ------------------------------------------------------------------------------------------------------ %
+
+    \item \textbf{Modelo Support Vector Machine (VSM)}: Este modelo trata de encontrar un hiperplano óptimo para la separación de dos clases distintas de datos, una a cada lado del hiperplano.
+    
+    Esta optimización se basa en maximizar el margen entre estas clases, donde el margen se define como la máxima distancia perpendicular entre el hiperplano y los puntos de datos más cercanos de cada clase. Este proceso busca encontrar un equilibrio entre maximizar el margen y minimizar las clasificaciones erróneas.
+
+    Para problemas donde los datos no son linealmente separables ---los que son la mayoría mínimamente complejos---,  se aplica una función kernel. Esta realiza una transformación matemática de los datos originales de forma que se proyecten en un espacio de mayor dimensionalidad, donde las dos clases sí se pueden separar de manera lineal mediante un hiperplano. Esta transformación matemática puede ser lineal, polinómica, radial (gaussiana), o sigmoide, dependiendo del tipo de kernel utilizado. Cada tipo de kernel aplica una transformación específica para capturar patrones complejos en los datos. Los más empleados son:
+
+    \begin{itemize}
+
+        \item El kernel lineal no realiza ninguna transformación adicional y es útil cuando los 
+        datos son casi linealmente separables en el espacio original.
+
+        \item El kernel polinómico expande el espacio de características usando combinaciones 
+        polinómicas de los datos originales, lo que ayuda a capturar relaciones no lineales de 
+        grado determinado.
+
+        \item El kernel radial crea un espacio de características de alta dimensión alrededor 
+        de puntos específicos, permitiendo capturar patrones complejos y relaciones locales.
+        
+    \end{itemize}
+
+    Además, los kernels polinómico y radial tendrás un determinado grado, que determinen el poder de separación del kernel en espacios complejos. Escoger el grado adecuado en el kernel de una SVM es crucial, ya que afecta directamente la capacidad del modelo para generalizar en nuevos datos y evitar el sobreajuste.
+
+    \begin{itemize}
+
+        \item Un alto grado de un kernel polinómico puede hacer que el modelo se ajuste demasiado a los datos de entrenamiento.
+
+        \item Un bajo grado de un kernel polinómico puede hacer que el modelo sea demasiado simple y no capture patrones importantes en los datos.
+
+    \end{itemize}
+
+    Sin embargo, aumentar mucho la dimensionalidad de los datos lleva al riesgo de sobreajuste, por lo que es necesario controlar la complejidad del modelo mediante parámetros de regularización. En este sentido, existe el hiperparámetro de regularización $C$, que representa el coste de error de las clasificaciones incorrectas, de forma que:
+
+    \begin{itemize}
+
+        \item un valor alto de $C$ resulta en bajo sesgo y alta varianza, ya que los parámetros de la función de decisión se ajustan más a los datos de entrenamiento, lo que puede llevar al sobreajuste; y, por el contrario,
+        
+        \item un valor bajo de $C$ resulta en alto sesgo y baja varianza, lo que significa que se permite un margen más amplio de clasificaciones incorrectas, lo que puede resultar en un subajuste del modelo.
+        
+    \end{itemize}
+
+    También cabe comentar que el modelo presenta muy baja explicabilidad, especialmente cuando se aplican kernels no lineales, donde las fronteras de decisión no son fácilmente interpretables debido a la transformación compleja del espacio de características.
+
+    % ------------------------------------------------------------------------------------------------------ %
+
+    \item \textbf{Decision Tree (DT)}: El árbol de decisión en problemas de clasificación funciona como un modelo de toma de decisiones estructurado jerárquicamente, donde cada nodo interno representa una pregunta basada en las características de los datos, cada rama representa una posible respuesta o criterio de decisión, y cada hoja representa la predicción final de la clase. Cada hoja está asociada a una clase específica.
+
+    Este modelo es de los más explicables, ya que permite visualizar cómo se toma cada decisión al seguir un camino específico en el árbol. Esto se pude ver en la Figura \ref{fig:churn_spotify_decisiontree}, en la que anticipamos el árbol de decisión obtenido en el posterior apartado. 
+
+    \begin{figure}[h!]
+        \centering
+        \fbox{\includegraphics[width=0.8\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_decision_tree.png}}
+        \caption{Extracto de un árbol de decisión.}
+        \label{fig:churn_spotify_decisiontree}
+    \end{figure} 
+
+    Los criterios de decisión en cada nodo son simples y se pueden interpretar directamente en términos de las características de los datos, lo cual facilita la comprensión del proceso de clasificación.
+
+    Ahora bien, ¿cómo se crea este árbol de decisión? Existen muy diversos algoritmos. En la descripción del nodo <<Tree Learner>> se indica que la mayor parte de la implementación corresponde al algoritmo C4.5, estudiado en clase. Este algoritmo era una mejora significativa del algoritmo ID3, permitiendo trabajar con atributos numéricos continuos, como en los de nuestro dataset. Como se indica en la propia descripción, C4.5 evalúa posibles umbrales y selecciona el valor que maximiza la ganancia de información, convirtiendo así los valores continuos en binarios.
+
+    Para seleccionar el atributo que mejor divide los datos en cada nodo del árbol utilizaremos el índice de Gini, una métrica que mide la impureza en los árboles de decisión.
+
+    \begin{tcolorbox}
+        [colback=gray!5!white, colframe=gray!60!black, title=NOTA, breakable]
+
+        La impureza mide cuán mezcladas están las clases en un conjunto de datos. Un conjunto puro (valor de índice bajo) tiene instancias que pertenecen a una sola clase, mientras que un conjunto impuro (valor de índice alto) contiene instancias de múltiples clases.
+
+    \end{tcolorbox}
+
+    % ------------------------------------------------------------------------------------------------------ %
+
+    \item \textbf{Random Forest}: Propone un algoritmo de tipo \textit{ensemble} que combina múltiples árboles de decisión para mejorar la precisión y robustez de las predicciones. El modelo entrena múltiples árboles de decisión \textit{débiles}. Los \textit{weak models} son modelos de aprendizaje automático que, por sí solos, tienen un desempeño apenas mejor que un modelo que adivina al azar, es decir, que tienen una precisión baja pero que aún pueden identificar patrones en los datos. La filosofía de los \textit{ensemble} es aprovechar la diversidad y la sabiduría colectiva de múltiples modelos para construir un predictor robusto y menos propenso a errores individuales.
+
+    Una de las principales ventajas que tiene el árbol de decisión la pierde el Random Forest, que es la explicabilidad, dado que al combinar muchos árboles de decisión, el modelo se vuelve más complejo y menos transparente. En un modelo de Random Forest, aunque cada árbol es interpretable por separado, la combinación de múltiples árboles hace que el proceso de toma de decisiones sea difícil de seguir y explicar en términos sencillos. A cambio, la robustez del modelo frente al sobreajuste mejora, ya que aunque los árboles individuales pueden sobreajustarse, la combinación de múltiples árboles ayuda a suavizar las predicciones y minimizar este problema. Además, como el entrenamiento de cada árbol es independiente, el algoritmo es paralelizable, siendo adecuado para grandes conjuntos de datos.
+
+    % ------------------------------------------------------------------------------------------------------ %
+
+    \item \textbf{Gradient Boosting}: Otro modelo de tipo \textit{ensemble}, que se basa en la construcción secuencial de árboles de decisión para mejorar la precisión del modelo. A diferencia del \textit{Random Forest}, donde los árboles son independientes y se entrenan en paralelo, el \textit{Gradient Boosting} construye cada árbol de manera secuencial, de modo que cada nuevo árbol se entrena para corregir los errores de predicción del conjunto de árboles anterior.
+
+    La idea central detrás de \textit{Gradient Boosting} es minimiza el error en cada etapa del entrenamiento. Este método comienza con un modelo simple, y añade modelos adicionales en función del gradiente de la pérdida, es decir, cada nuevo árbol intenta ajustar los residuos (errores) que los árboles anteriores no lograron predecir correctamente. Este enfoque permite que el modelo se enfoque en las muestras más difíciles o con errores más grandes en cada iteración, lo cual puede resultar en un modelo más preciso y efectivo. Sin embargo, este proceso de ajuste secuencial tiene desventajas en cuanto a eficiencia, ya que los árboles no se pueden entrenar en paralelo, y el modelo puede ser más propenso al sobreajuste si se construyen demasiados árboles o si el ajuste es demasiado específico.
+
+    En términos de interpretabilidad, el \textit{Gradient Boosting} es similar al \textit{Random Forest}: aunque cada árbol individual es interpretable, el modelo completo se vuelve menos transparente debido a la gran cantidad de árboles. En la práctica, \textit{Gradient Boosting} ha demostrado robustez y un rendimiento destacados para múltiples problemas de clasificación, especialmente en problemas con datos tabulares.
+
+\end{enumerate}
+
+% ---------------------------------------------------------------------------------------------------------- %
+
+\subsubsection{Métricas escogidas para la evaluación del rendimiento.}
+
+\begin{itemize}
+
+    \item \textbf{Matriz de confusión}: Esta herramienta permite visualizar el desempeño de un algoritmo de clasificación binaria. Cada columna de la matriz representa el número de predicciones de cada clase, mientras que cada fila representa a las instancias en la clase real, de forma que podemos permite observar cómo se distribuyen las predicciones del modelo respecto a las clases verdaderas.
+
+    En los problema de clasificación binaria las matrices de confusión tienen una estructura como la mostrada en \ref{fig:churn_spotify_confusion_matrix_binary}. En esta estructura encontramos:
+
+    \begin{itemize}
+        \item $TP$ es el número de verdaderos positivos (instancias positivas correctamente clasificadas).
+        \item $TN$ es el número de verdaderos negativos (instancias negativas correctamente clasificadas).
+        \item $FP$ es el número de falsos positivos (instancias negativas incorrectamente clasificadas como positivas).
+        \item $FN$ es el número de falsos negativos (instancias positivas incorrectamente clasificadas como negativas).
+    \end{itemize}
+
+    \begin{figure}[h!]
+        \centering
+        \fbox{\includegraphics[width=0.5\textwidth, keepaspectratio]{secciones/sec2/imagenes/confusion_matrix_binary.png}}
+        \caption{Estructura de una matriz de confusión en clasificación binaria.}
+        \label{fig:churn_spotify_confusion_matrix_binary}
+    \end{figure}
+
+    Muchas de las siguientes métricas son calculadas a partir de los datos de esta matriz de confusión.
+
+    % ------------------------------------------------------------------------------------------------------ %
+    
+    \item \textbf{Exactitud (\textit{accuracy})}: Es la proporción de predicciones correctas respecto al total de predicciones realizadas. Es la más básica de todas las métricas.
+
+    $$
+    Accuracy = \frac{TP+TN}{TP+TN+FP+FN} \in \left[0,1\right]
+    $$
+
+    La principal ventaja de esta métrica es que proporciona una medida simple y fácilmente interpretable de qué tan bien el modelo está clasificando las instancias.
+
+    Sin embargo, cuando las clases en el conjunto de datos están desbalanceadas, es decir, hay muchas más instancias en una clase que en otras, o cuando el coste de fallar cada clase es distinto, la \textit{accuracy} puede ser engañosa. Un modelo que predice siempre la clase mayoritaria puede tener una alta \textit{accuracy} simplemente debido al desbalance de clases, pero este modelo no sería útil en la práctica.
+
+    % ------------------------------------------------------------------------------------------------------ %
+
+    \item \textbf{Precisión}: Es la proporción de verdaderos positivos (TP) respecto a la suma de verdaderos positivos y falsos positivos (FP).
+     
+    $$
+    Precision = \frac{TP}{TP+FP} \in \left[0,1\right]
+    $$
+
+    Responde a la pregunta "¿Qué tan efectivo es el modelo en identificar la mayoría de los casos positivos reales?".
+
+    % ------------------------------------------------------------------------------------------------------ %
+
+    \item \textbf{Exhaustividad (\textit{recall})}: Es la proporción de verdaderos positivos (TP) respecto a la suma de verdaderos positivos y falsos negativos (FN).
+     
+    $$
+    Recall = \frac{TP}{TP+FN} \in \left[0,1\right]
+    $$
+
+    Responde a la pregunta "¿Qué tan efectivo es el modelo en identificar la mayoría de los casos positivos reales?".
+
+    % ------------------------------------------------------------------------------------------------------ %
+    
+    \item \textbf{F1-Score}: Se considera como una media armónica que combina los valores de la precisión y de la exhaustividad.
+
+    De esta forma, la métrica F1 se calcularía:
+    $$
+    F1 = \frac{2 \times Precision \times Recall}{Precision+Recall} \in \left[0,1\right]
+    $$
+
+    Esta métrica es especialmente útil cuando se tienen conjuntos de datos desbalanceados, donde hay muchas más instancias de una clase que de otra.
+
+    Por contraparte, proporciona una medida combinada de la precisión y el \textit{recall}, que puede no ser tan intuitiva de interpretar como otras métricas más simples, como la \textit{accuracy}.
+
+    % ------------------------------------------------------------------------------------------------------ %
+
+    \item \textbf{La curva ROC y la AUC}: La curva ROC proporciona una representación gráfica de la relación entre la tasa de verdaderos positivos (TPR) y la tasa de falsos positivos (FPR) a diferentes umbrales de decisión del modelo.
+
+    La naturaleza de los umbrales de decisión depende en gran medida del modelo de clasificación utilizado y de la forma en que este modelo produce sus predicciones.
+
+    Por ejemplo, en el \textit{k}-NN los umbrales de decisión dependerán del valor de $k$, puesto que uno pequeño puede ser muy sensible a instancias individuales, que se comporte de manera errática, en cambio, un valor alto suaviza las decisiones, promediando la influencia de los vecinos, todavía más si se pondera el peso de la decisión con la distancia a la que está cada una de las $k$ instancias.
+
+    En el \textit{Random Forest} los umbrales de decisión dependerán de la votación combinada de los árboles individuales. Los umbrales de decisión pueden ajustarse al modificar la probabilidad mínima que se necesita para clasificar una instancia en una clase específica. Al incrementar el umbral, se requiere un consenso más fuerte entre los árboles para clasificar una instancia en una clase positiva, lo cual reduce la tasa de falsos positivos (FPR), pero también puede reducir la tasa de verdaderos positivos (TPR).
+
+    Esta variabilidad de la curva dependiente de los umbrales de decisión y la naturaleza de cada modelo de clasificación hace que debamos realizar la comparación con precaución, y salvando las distancias.
+
+\end{itemize}
+
+
+
 
 
