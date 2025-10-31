@@ -394,7 +394,7 @@ Se han escogido los siguientes modelos el entrenamiento:
 
 % ---------------------------------------------------------------------------------------------------------- %
 
-\subsubsection{Métricas escogidas para la evaluación del rendimiento.}
+\subsubsection{Métricas escogidas para la evaluación del rendimiento}
 
 \begin{itemize}
 
@@ -452,16 +452,34 @@ Se han escogido los siguientes modelos el entrenamiento:
 
     % ------------------------------------------------------------------------------------------------------ %
     
-    \item \textbf{F1-Score}: Se considera como una media armónica que combina los valores de la precisión y de la exhaustividad.
+    \item \textbf{F1-Score}: Se considera como una media armónica que combina los valores de la precisión y de la exhaustividad. Su objetivo es medir la calidad de las predicciones dentro de la clase positiva. 
 
     De esta forma, la métrica F1 se calcularía:
     $$
-    F1 = \frac{2 \times Precision \times Recall}{Precision+Recall} \in \left[0,1\right]
+    \textnormal{F1-Score} = \frac{2 \times Precision \times Recall}{Precision+Recall} \in \left[0,1\right]
     $$
 
-    Esta métrica es especialmente útil cuando se tienen conjuntos de datos desbalanceados, donde hay muchas más instancias de una clase que de otra.
+    Esta métrica es especialmente útil cuando se tienen conjuntos de datos desbalanceados, donde hay muchas más instancias de una clase que de otra. 
 
     Por contraparte, proporciona una medida combinada de la precisión y el \textit{recall}, que puede no ser tan intuitiva de interpretar como otras métricas más simples, como la \textit{accuracy}.
+
+    % ------------------------------------------------------------------------------------------------------ %
+    
+    \item \textbf{G-Mean}: Mide qué tan bien el modelo clasifica ambas clases, a partir de dos medidas:
+    
+    \begin{itemize}
+        \item La sensibilidad (\textit{sensitivity}), que es el \textit{recall} de la clase positiva.
+        \item La especifidad (\textit{specifity}), que es el \textit{recall} de la clase negativa. 
+    \end{itemize}
+
+    De esta forma, la métrica G-Mean se calcularía:
+    $$
+    \textnormal{G-Mean} = \sqrt{Sensitivity \times Specifity} \in \left[0,1\right]
+    $$
+
+    A diferencia de F1-Score, esta no le da más importancia a un tipo de error sobre otro. Es por ello que es útil en escenarios donde se busca un rendimiento equilibrado entre ambas clases, como en problemas con clases desbalanceadas, ya que penaliza los modelos que presentan un rendimiento muy desigual entre clases. 
+
+    Un valor alto de G-Mean indica que el modelo mantiene un buen equilibrio entre la detección de instancias positivas y negativas, mientras que un valor bajo sugiere que el modelo tiende a favorecer una de las clases en detrimento de la otra.
 
     % ------------------------------------------------------------------------------------------------------ %
 
@@ -478,6 +496,102 @@ Se han escogido los siguientes modelos el entrenamiento:
 \end{itemize}
 
 
+\subsubsection{Comparación de modelos y elección}
+
+La optimización de los hiperparámetros se ha realizado con los nodos <<Parameter Optimization Loop>> de la extensión \textit{KNIME Optimization extension}. En la Figura \ref{fig:churn_spotify_hyperparameter_optimization_knn} se visualiza el esquema de nodos para la optimización del hiperparámetro $k$ del modelo \textit{k}-nearest neighbors. Se ha probado con valores enteros de $k$ entre 1 y 20, y se maximiza la métrica G-Mean (véase la Figura \ref{fig:churn_spotify_config_loop_opt}). Los resultados (Figura \ref{fig:churn_spotify_opt_results}) en este caso, muestran que a menor $k$, mejor es el desempeño del modelo.
+
+\begin{tcolorbox}
+    [colback=gray!5!white, colframe=gray!60!black, title=NOTA, breakable]
+
+    Se ha escogido G-Mean en vez de F1-Score, dado que varios modelos no clasificaban ninguna instancia como \code{CHURNED}, lo que daba F1-Score indeterminado.
+
+\end{tcolorbox}
 
 
+\begin{figure}[h!]
+    \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_hyperparameter_optimization.png}}
+    \caption{
+        Esquema de optimización para el modelo \textit{k}-NN.
+    }
+    \label{fig:churn_spotify_hyperparameter_optimization_knn}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{secciones/sec2/imagenes/churn_spotify_config_start_loop_opt.png}
+        \caption{Configuración del nodo inicial del bucle de optimización.}
+        \label{fig:churn_spotify_config_start_loop_opt}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{secciones/sec2/imagenes/churn_spotify_config_end_loop_opt.png}
+        \caption{Configuración del nodo final del bucle de optimización.}
+        \label{fig:churn_spotify_config_end_loop_opt}
+    \end{subfigure}
+    \caption{Configuración del bucle de optimización para el modelo \textit{k}-NN.}
+    \label{fig:churn_spotify_config_loop_opt}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \fbox{\includegraphics[width=0.5\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_opt_results.png}}
+    \caption{
+        Resultados de la optimización para el modelo \textit{k}-NN.
+    }
+    \label{fig:churn_spotify_opt_results}
+\end{figure}
+
+\begin{tcolorbox}
+    [colback=gray!5!white, colframe=gray!60!black, title=Técnicas de optimización, breakable]
+
+    Existen numerosas técnicas de optimización de parámetros. Las dos técnicas más simples son:
+
+    \begin{itemize}
+    
+        \item \textbf{Búsqueda exhaustiva o en \textit{grid}}: Consiste en definir un conjunto finito de valores posibles para cada hiperparámetro y evaluar el modelo con todas las combinaciones posibles de dichos valores. Esta técnica garantiza encontrar la mejor combinación dentro del espacio definido, pero puede resultar muy costosa computacionalmente cuando el número de parámetros o el tamaño del rango de búsqueda es elevado.
+        
+        \item \textbf{Búsqueda aleatoria (\textit{random search})}: En lugar de probar todas las combinaciones posibles de hiperparámetros, selecciona al azar un número determinado de combinaciones dentro de los rangos definidos por el usuario. Aunque no explora sistemáticamente todo el espacio de búsqueda, suele ser más eficiente en tiempo y, en muchos casos, alcanza resultados comparables a la búsqueda exhaustiva.
+    
+    \end{itemize}
+
+\end{tcolorbox}
+
+Al igual que con este modelo, se ha realizado optimización en el resto:
+
+\begin{itemize}
+    
+    \item Support Vector Machine:
+    Se experimentó con distintos kernel lineal y polinomial, valores del parámetro de coste $C$ comprendidos entre $2^{-5}$ y $2^{10}$, y grados ---para determinar entre lineal o polinomial--- entre 1 y 5. Dado el elevado número de combinaciones posibles, se optó por una estrategia de random search con 40 iteraciones. La configuración óptima obtenida ha sido con kernel polinómico de grado $3$ y con coste $C$ de $2^{8}$.
+
+    \item Decision Tree:
+    Se probaron configuraciones con y sin poda, empleando como criterios de calidad tanto \textit{Gain Ratio} como \textit{Gini Index}, y variando el número mínimo de hojas por nodo entre 2 y 10. En este caso, fue factible realizar una búsqueda exhaustiva (\textit{grid search}) sobre todas las combinaciones posibles. La configuración óptima encontrada correspondió a un árbol sin poda y con un mínimo de 2 hojas por nodo.
+
+    \item Random Forest:
+    Se evaluaron combinaciones del número de árboles entre 100 y 500, y de la profundidad máxima del árbol entre 5 y 30. La búsqueda se realizó mediante fuerza bruta, con incrementos de 100 en el número de árboles y de 5 en la profundidad. La configuración óptima obtenida fue de 100 árboles con una profundidad máxima de 25.
+
+    \item Gradient Boosting:
+    Se analizaron valores del número de árboles entre 100 y 500, profundidades de árbol entre 5 y 30, y tasas de aprendizaje (\textit{learning rate}) comprendidas entre 0.01 y 0.1. En este caso, se empleó una estrategia de \textit{random search} con 40 iteraciones. La configuración óptima hallada fue: 249 árboles, profundidad máxima de 26 y \textit{learning rate} de 0.03.
+
+\end{itemize}
+
+Finalmente, se prueba a entrenar cada modelo con los hiperparámetros obtenidos, realizando validación cruzada. Los resultados, plasmados en la Figura \ref{fig:churn_spotify_comparison_results}, señalan como ganador el modelo de Gradient Boosting, seguido de \textit{k}-NN. Aún así, los valores de F1-Score y G-Mean señalan valores muy pobres.
+
+\begin{figure}[h!]
+    \centering
+    \fbox{\includegraphics[width=\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_models_comparison.png}}
+    \caption{
+        Resultados comparativos de desempeño logrado por cada modelo.
+    }
+    \label{fig:churn_spotify_comparison_results}
+\end{figure}
+
+
+\subsubsection{Rendimiento del modelo final}
+
+El modelo final, por tanto, es Gradient Boosting, con los valores óptimos obtenidos anteriormente para los hiperparámetros. El modelo logra un F1-Score de apenas 0.29 y un G-Mean de 0.469. Estos son valores muy pobres, ya que un modelo que clasifica aleatoriamente ---si bien, en un escenario balanceado--- típicamente obtendría un F1-Score y un G-Mean de 0.5. El bajo valor del F1-Score indica una deficiente capacidad para identificar correctamente los casos positivos, mientras que el G-Mean confirma que el modelo no logra equilibrar adecuadamente el rendimiento entre ambas clases.
+
+El modelo, por tanto, presenta un desempeño claramente insuficiente para el problema planteado. Esto sugiere que el conjunto de características disponibles no aporta información discriminativa suficiente.
 
