@@ -30,8 +30,11 @@ Dentro de las variables numéricas, se pueden distinguir aquellas representadas 
 
 Cada tipo de dato requiere un tratamiento específico, y algunos modelos serán más adecuados que otros para cada tipo. En ocasiones, será necesario modificar la codificación para garantizar una mejor compatibilidad con el modelo.
 \begin{itemize}
+
     \item Modelos como los de árboles de decisión, \textit{Random Forest} o \textit{Naive Bayes} ---en su forma base--- funcionan con datos categóricos.
+    
     \item Modelos como los de \textit{K-Nearest Neighbour}, las \textit{Support Vector Machine} o las redes neuronales, ---de nuevo, hablamos en su forma base--- trabajan con datos numéricos.
+
 \end{itemize}
 
 Además, las variables categóricas y numéricas presentan una semántica muy distinta. Generalmente, las variables categóricas no presentan un orden inherente en sus valores, a diferencia de las variables numéricas. Sin embargo, es común encontrar en ciertos conjuntos de datos variables codificadas con números enteros que actúan como códigos, pero que, desde un punto de vista semántico, se comportan como variables categóricas, ya que no presentan un orden inherente en sus valores; por ejemplo, el código \code{2} no está más cerca del \code{3} que del \code{4}. Cuando identifiquemos este tipo de variables, el primer paso en el preprocesamiento será cambiar su codificación para evitar que los modelos los interpreten como variables numéricas, que puedan llegar a tener alterar el sentido de una predicción.
@@ -45,7 +48,7 @@ En la primera modificación del conjunto de datos original, cambiaremos el tipo 
 El resto de variables del dataset son las siguientes:
 
     \begin{itemize}
-        \item \code{user\_id}:
+        \item \code{user\_id}: De tipo entero. Identifica a cada usuario.
         \item \code{gender}: De tipo categórico (\textit{string}). Genéro del usuario.
         \item \code{age}: De tipo entero. Edad del usuario.
         \item \code{country}: De tipo categórico (\textit{string}). País del usuario. 
@@ -62,11 +65,11 @@ El resto de variables del dataset son las siguientes:
 % ---------------------------------------------------------------------------------------------------------- %
 % ---------------------------------------------------------------------------------------------------------- %
 
-\subsection{Exploración, visualización y preprocesado de datos}
+\subsection{Exploración y preprocesado de datos}
 
 \subsubsection{Carga de datos}
 
-La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>. En la Figura \ref{fig:spotify_churn_CSV_reader} vemos que el conjunto de datos tiene 8 000 instancias, cada con 12 características y su etiqueta ---que es como se denomina al valor real de la variable \textit{target} en cada instancia---.
+La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>. En la Figura \ref{fig:spotify_churn_CSV_reader} vemos que el conjunto de datos tiene 8 000 instancias, cada una con 12 características y su \textbf{etiqueta} (el valor real de la variable \textit{target} en cada instancia).
 
 \begin{figure}[h!]
     \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_CSV_reader.png}}
@@ -77,7 +80,7 @@ La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>. En la Fig
     \label{fig:spotify_churn_CSV_reader}
 \end{figure}
 
-En las siguientes subsecciones limpiaremos y prepararemos los datos, para facilitar su interpretación y exploración inicial. Y es que, muchas veces, los datos pueden estar incompletos, contener valores atípicos o estar en formatos difíciles de analizar directamente. Posteriormente, realizaremos ajustes específicos en función de los requisitos de cada modelo.
+En las siguientes subsecciones preparamos los datos, para facilitar su interpretación y exploración inicial. Y es que, muchas veces, los datos pueden estar incompletos, contener valores atípicos o estar en formatos difíciles de analizar directamente. Posteriormente, realizaremos ajustes específicos en función de los requisitos de cada modelo.
 
 % ---------------------------------------------------------------------------------------------------------- %
 
@@ -106,13 +109,16 @@ Analicemos la información extraída de este reporte:
     
     \item \code{subscription\_type} tiene cuatro valores posibles: \code{Free}, \code{Premium}, \code{Student} y \code{Family}. 
     
-    \item \code{device\_type} tiene tres valores posibles: \code{Desktop}, \code{Web} y \code{Mobile}. 
+    \item \code{device\_type} tiene tres valores posibles: \code{Desktop}, \code{Web} y \code{Mobile}.
 
 \end{itemize}
 
 En todas las características comprobamos que las diversas categorías están muy equilibradas. La mayor diferencia de ocurrencias entre dos categorías de cada variable son de apenas un 0.5\% en \code{gender}, 1\% en \code{country}, 2.4\% en \code{subscription\_type} y 2.3\% en \code{device\_type}. La variable objetivo sí presenta dos clases desbalanceadas: un 74\% de las instancias son de usuarios que no han cancelado su cuenta, dejando solo un 26\% de las instancias positivas. 
 
-¿Cómo se relacionan entre ellas? En la Figura \ref{fig:churn_spotify_parallelcategories_categorical_attributes} se muestra cómo se corresponden estas variables categóricas en sus distintos valores con las clases de la variable objetivo mediante un gráfico de Categorías Paralelas. Este gráfico es súmamente útil, ya que nos permite ver qué proporción de cada valor hay por cada variable categórica, identificar combinaciones más comunes entre categorías, así como ver la proporción de préstamos aprobados o denegados por cada uno de esos valores. En la gráfica se observa que existe prácticamente la misma proporción de usuarios dentro de cada grupo que cancela la cuenta, es decir, el \textit{churn} se distribuye de manera uniforme entre las diferentes categorías analizadas, sin que ninguna combinación particular de atributos categóricos muestre una predisposición significativamente mayor a la cancelación del servicio. Esto sugiere que estas variables categóricas por sí solas no son predictores fuertes de la cancelación.
+Por otro lado, la variable objetivo, \code{churned\_status}, presenta \code{CHURNED} en el 25.89\% de las instancias, y \code{NOT\_CHURNED} en el 74.11\% restante. 
+
+¿Y cómo se relacionan los atributos con ella?
+En la Figura \ref{fig:churn_spotify_parallelcategories_categorical_attributes} se muestra cómo se corresponden estas variables categóricas en sus distintos valores con las clases de la variable objetivo mediante un gráfico de Categorías Paralelas. Este gráfico es súmamente útil, ya que nos permite ver qué proporción de cada valor hay por cada variable categórica, identificar combinaciones más comunes entre categorías, así como ver la proporción de préstamos aprobados o denegados por cada uno de esos valores. En la gráfica se observa que existe prácticamente la misma proporción de usuarios dentro de cada grupo que cancela la cuenta, es decir, el \textit{churn} se distribuye de manera uniforme entre las diferentes categorías analizadas, sin que ninguna combinación particular de atributos categóricos muestre una predisposición significativamente mayor a la cancelación del servicio. Esto sugiere que estas variables categóricas por sí solas no son predictores fuertes de la cancelación.
 
 \begin{figure}[h!]
     \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_parallelcategories_categorical_variables.png}}
@@ -246,9 +252,9 @@ En este caso particular, las 4 columnas originales se expanden a 18. No obstante
 
 \subsubsection{Normalización de las variables numéricas}
 
-Finalmente, aplicará normalización \textbf{Z-\textit{Score} o estandarización} sobre todas las variables. Esta normalización reescala los valores de cada variable de manera que tengan una media igual a 0 y una desviación estándar igual a 1. 
+Finalmente, aplicará normalización \textbf{Z-Score o estandarización} sobre todas las variables. Esta normalización reescala los valores de cada variable de manera que tengan una media igual a 0 y una desviación estándar igual a 1. 
 
-Para un valor $x_i$ de una variable $X$, el Z-\textit{Score} se calcula como:
+Para un valor $x_i$ de una variable $X$, el Z-Score se calcula como:
 
 $$
 z_i = \frac{x_i-\mu}{\sigma}
@@ -264,33 +270,7 @@ donde:
 % ---------------------------------------------------------------------------------------------------------- %
 % ---------------------------------------------------------------------------------------------------------- %
 
-\subsection{Definición del protocolo de validación experimental}
-
-A continuación, procederemos a entrenar y evaluar distintos modelos de \textit{machine learning} para los datos del problema, seleccionando finalmente el modelo con el mejor rendimiento. Es fundamental evitar el \textit{data snooping} durante este proceso, para asegurar que la evaluación refleja un rendimiento realista y generalizable.
-
-El \textit{\textbf{data snooping}} ocurre cuando la información de los datos de test dirige el entrenamiento del modelo, es decir, cuando usamos repetidamente los datos de test para tomar decisiones sobre el modelo, como escoger hiperparámetros, seleccionar el mejor modelo de varios probados, o ajustar variables. Como resultado,el modelo se ajusta no solo a los datos de entrenamiento, sino también a las particularidades de los datos de test, llevando a una posible generalización deficiente.
-
-Esta mala práctica podemos evitarla siguiendo un enfoque riguroso en la gestión de los conjuntos de datos.Para lograrlo deberemos:
-
-\begin{itemize}
-
-    \item \textbf{Dividir los datos en conjuntos de entrenamiento, validación y test}: El conjunto de entrenamiento se utiliza para ajustar los parámetros del modelo; el conjunto de validación sirve para la selección de hiperparámetros y la comparación de modelos; y el conjunto de test solo se usa al final, exclusivamente para evaluar el rendimiento del modelo elegido. De esta manera, los datos de test no influyen en ninguna decisión de desarrollo.
-
-    \item \textbf{Aplicar validación cruzada}: Esta técnica permite obtener una evaluación más robusta y confiable del rendimiento del modelo utilizando solo los datos de entrenamiento y validación. Al realizar múltiples divisiones de los datos de entrenamiento, la validación cruzada ayuda a reducir la dependencia de un solo conjunto de validación, minimizando el riesgo de sobreajuste.
-
-    Una implementación de validación cruzada es el \textit{k-fold}, en la que el conjunto de datos se divide en $k$ partes (o \textit{folds}) de tamaño similar. El modelo se entrena $k$ veces, usando en cada iteración $k-1$ pliegues para entrenar y el pliegue restante para validar. 
-
-    En este problema, dado que tenemos un gran número de instancias, utilizaré $k=5$ para la validación cuzada.
-    
-    \item \textbf{Evitar la revisión o análisis del conjunto de test}: Es crucial no utilizar los datos de test para hacer ajustes adicionales en el modelo. El conjunto de test debe mantenerse separado y solo emplearse para la evaluación final del modelo, después de haber tomado todas las decisiones de desarrollo.
-    
-\end{itemize}
-
-% ---------------------------------------------------------------------------------------------------------- %
-% ---------------------------------------------------------------------------------------------------------- %
-% ---------------------------------------------------------------------------------------------------------- %
-
-\subsection{Entrenamiento de los modelos}
+\subsection{Materiales y métodos}
 
 \subsubsection{Modelos escogidos para la comparación}
 
@@ -298,13 +278,11 @@ Se han escogido los siguientes modelos el entrenamiento:
 
 \begin{enumerate}
 
-    \item \textbf{Modelo \textit{k}-nearest neighbors (\textit{k}-NN)}: Este modelo clasifica una instancia en función de las $k$ instancias etiquetadas más cercanas en un espacio de $n$ dimensiones (donde $n$ representa el número de características). La cercanía entre instancias se determina a través de una función de distancia, que puede ser adaptada para manejar distancias incluso entre valores categóricos (de haberlos, porque en nuestro caso los hemos convertido todos a numéricos), o asignar pesos diferentes a ciertas características en función de su importancia.
-    
-    También se puede obtener la clasificación ponderando por la distancia a cada una de las instancias más cercanas, lo que significa que las instancias más cercanas tienen mayor influencia en la predicción que las más lejanas.
+    \item \textbf{Modelo \textit{k}-nearest neighbors (\textit{k}-NN)}: Este modelo clasifica una instancia en función de las $k$ instancias etiquetadas más cercanas en un espacio de $n$ dimensiones (donde $n$ representa el número de características). La cercanía entre instancias se determina a través de una función de distancia, que puede ser adaptada para manejar distancias incluso entre valores categóricos ---de haberlos, porque en nuestro caso los hemos convertido todos a numéricos--- (si bien, KNIME no permite modificar la función de distancia euclidiana), o asignar pesos diferentes a ciertas características en función de su importancia. También se puede obtener la clasificación ponderando por la distancia a cada una de las instancias más cercanas, lo que significa que las instancias más cercanas tienen mayor influencia en la predicción que las más lejanas.
 
     Sin embargo, en su versión básica, el modelo trabaja principalmente con variables numéricas, utiliza la distancia Euclidiana entre instancias y requiere normalizar previamente las variables. La normalización es esencial para evitar que características con escalas mayores dominen la distancia, garantizando así que cada variable contribuya de manera equitativa en el cálculo de la cercanía.
 
-    Tiene como principal ventaja que es un modelo bastante intuitivo de entender, y es medianamente explicable ---ya que la predicción se realiza en base a casos similares de los que sí conocemos la clase---. Sin embargo, una desventaja importante del modelo es que puede resultar costoso computacionalmente y lento, ya que para predecir en conjuntos de datos grandes necesita calcular la distancia entre la nueva instancia y todas las instancias etiquetadas en el conjunto de entrenamiento. 
+    Tiene como principal ventaja que es un modelo bastante intuitivo de entender, y es medianamente explicable ---ya que la predicción se realiza en base a casos similares de los que sí conocemos la clase---. Sin embargo, una desventaja importante del modelo es que puede resultar costoso computacionalmente y lento, ya que para predecir en conjuntos de datos grandes necesita calcular la distancia entre la nueva instancia y todas las instancias etiquetadas en el conjunto de entrenamiento, si bien existen alternativas que permiten optimizar este proceso, como el uso de estructuras de datos especializadas, que reducen el tiempo de búsqueda de los vecinos más cercanos. 
 
     % ------------------------------------------------------------------------------------------------------ %
 
@@ -312,29 +290,26 @@ Se han escogido los siguientes modelos el entrenamiento:
     
     Esta optimización se basa en maximizar el margen entre estas clases, donde el margen se define como la máxima distancia perpendicular entre el hiperplano y los puntos de datos más cercanos de cada clase. Este proceso busca encontrar un equilibrio entre maximizar el margen y minimizar las clasificaciones erróneas.
 
-    Para problemas donde los datos no son linealmente separables ---los que son la mayoría mínimamente complejos---,  se aplica una función kernel. Esta realiza una transformación matemática de los datos originales de forma que se proyecten en un espacio de mayor dimensionalidad, donde las dos clases sí se pueden separar de manera lineal mediante un hiperplano. Esta transformación matemática puede ser lineal, polinómica, radial (gaussiana), o sigmoide, dependiendo del tipo de kernel utilizado. Cada tipo de kernel aplica una transformación específica para capturar patrones complejos en los datos. Los más empleados son:
+    Para problemas donde los datos no son linealmente separables ---los que son la mayoría mínimamente complejos---,  se aplica una función kernel. Esta realiza una transformación matemática de los datos originales de forma que se proyecten en un espacio de mayor dimensionalidad, donde las dos clases sí se pueden separar de manera lineal mediante un hiperplano. Esta transformación matemática puede ser lineal, polinómica, radial (gaussiana), o sigmoide, dependiendo del tipo de \textit{kernel} utilizado. Cada tipo de \textit{kernel} aplica una transformación específica para capturar patrones complejos en los datos. Los más empleados son:
 
     \begin{itemize}
 
-        \item El kernel lineal no realiza ninguna transformación adicional y es útil cuando los 
+        \item El \textit{kernel} lineal no realiza ninguna transformación adicional y es útil cuando los 
         datos son casi linealmente separables en el espacio original.
 
-        \item El kernel polinómico expande el espacio de características usando combinaciones 
+        \item El \textit{kernel} polinómico expande el espacio de características usando combinaciones 
         polinómicas de los datos originales, lo que ayuda a capturar relaciones no lineales de 
         grado determinado.
-
-        \item El kernel radial crea un espacio de características de alta dimensión alrededor 
-        de puntos específicos, permitiendo capturar patrones complejos y relaciones locales.
         
     \end{itemize}
 
-    Además, los kernels polinómico y radial tendrás un determinado grado, que determinen el poder de separación del kernel en espacios complejos. Escoger el grado adecuado en el kernel de una SVM es crucial, ya que afecta directamente la capacidad del modelo para generalizar en nuevos datos y evitar el sobreajuste.
+    Además, el \textit{kernel} polinómico tendrán un determinado grado, que determinen el poder de separación del \textit{kernel} en espacios complejos. Escoger el grado adecuado en el \textit{kernel} de una SVM es crucial, ya que afecta directamente la capacidad del modelo para generalizar en nuevos datos y evitar el sobreajuste:
 
     \begin{itemize}
 
-        \item Un alto grado de un kernel polinómico puede hacer que el modelo se ajuste demasiado a los datos de entrenamiento.
+        \item Un bajo grado de un \textit{kernel} polinómico puede hacer que el modelo sea demasiado simple y no capture patrones importantes en los datos.
 
-        \item Un bajo grado de un kernel polinómico puede hacer que el modelo sea demasiado simple y no capture patrones importantes en los datos.
+        \item Un alto grado de un \textit{kernel} polinómico puede hacer que el modelo se ajuste demasiado a los datos de entrenamiento.
 
     \end{itemize}
 
@@ -348,11 +323,11 @@ Se han escogido los siguientes modelos el entrenamiento:
         
     \end{itemize}
 
-    También cabe comentar que el modelo presenta muy baja explicabilidad, especialmente cuando se aplican kernels no lineales, donde las fronteras de decisión no son fácilmente interpretables debido a la transformación compleja del espacio de características.
+    También cabe comentar que el modelo presenta muy baja explicabilidad, especialmente cuando se aplican \textit{kernels} no lineales, donde las fronteras de decisión no son fácilmente interpretables debido a la transformación compleja del espacio de características.
 
     % ------------------------------------------------------------------------------------------------------ %
 
-    \item \textbf{Decision Tree (DT)}: El árbol de decisión en problemas de clasificación funciona como un modelo de toma de decisiones estructurado jerárquicamente, donde cada nodo interno representa una pregunta basada en las características de los datos, cada rama representa una posible respuesta o criterio de decisión, y cada hoja representa la predicción final de la clase. Cada hoja está asociada a una clase específica.
+    \item \textbf{Decision Tree}: El árbol de decisión en problemas de clasificación funciona como un modelo de toma de decisiones estructurado jerárquicamente, donde cada nodo interno representa una pregunta basada en las características de los datos, cada rama representa una posible respuesta o criterio de decisión, y cada hoja representa la predicción final de la clase. Cada hoja está asociada a una clase específica.
 
     Este modelo es de los más explicables, ya que permite visualizar cómo se toma cada decisión al seguir un camino específico en el árbol. Esto se pude ver en la Figura \ref{fig:churn_spotify_decisiontree}, en la que anticipamos el árbol de decisión obtenido en el posterior apartado. 
 
@@ -365,22 +340,55 @@ Se han escogido los siguientes modelos el entrenamiento:
 
     Los criterios de decisión en cada nodo son simples y se pueden interpretar directamente en términos de las características de los datos, lo cual facilita la comprensión del proceso de clasificación.
 
-    Ahora bien, ¿cómo se crea este árbol de decisión? Existen muy diversos algoritmos. En la descripción del nodo <<Tree Learner>> se indica que la mayor parte de la implementación corresponde al algoritmo C4.5, estudiado en clase. Este algoritmo era una mejora significativa del algoritmo ID3, permitiendo trabajar con atributos numéricos continuos, como en los de nuestro dataset. Como se indica en la propia descripción, C4.5 evalúa posibles umbrales y selecciona el valor que maximiza la ganancia de información, convirtiendo así los valores continuos en binarios.
+    Ahora bien, ¿cómo se crea este árbol de decisión? Existen muy diversos algoritmos. En la descripción del nodo <<Tree Learner>> se indica que la mayor parte de la implementación corresponde al algoritmo C4.5 \cite{quinlan1993program}, estudiado en clase. Este algoritmo era una mejora significativa del algoritmo ID3 \cite{quinlan1986induction}, permitiendo trabajar con atributos numéricos continuos, como en los de nuestro dataset. Como se indica en la propia descripción, C4.5 evalúa posibles umbrales y selecciona el valor que maximiza la ganancia de información, convirtiendo así los valores continuos en binarios.
 
-    Para seleccionar el atributo que mejor divide los datos en cada nodo del árbol utilizaremos el índice de Gini, una métrica que mide la impureza en los árboles de decisión.
+    Para seleccionar el atributo que mejor divide los datos en cada nodo del árbol se utilizará el índice de Gini, una métrica que mide la impureza en los árboles de decisión.
 
     \begin{tcolorbox}
-        [colback=gray!5!white, colframe=gray!60!black, title=NOTA, breakable]
+        [colback=gray!5!white, colframe=gray!60!black, title=Índice de Gini, breakable]
+        {\setlength{\parskip}{0.5em plus 0.2em minus 0.1em}
 
         La impureza mide cuán mezcladas están las clases en un conjunto de datos. Un conjunto puro (valor de índice bajo) tiene instancias que pertenecen a una sola clase, mientras que un conjunto impuro (valor de índice alto) contiene instancias de múltiples clases.
 
+        El índice de Gini se define como:
+
+        $$
+        \textnormal{Gini} = 1 - \sum_{i=1}^C p_i^2
+        $$
+        donde $p_i$ es la proporción de instancias pertenecientes a la clase $i$ dentro del nodo y $C$ es el número total de clases. 
+
+        El valor del índice de Gini oscila entre 0 y 0.5 en problemas binarios: un valor de 0 indica pureza total(todas las observaciones pertenecen a una sola clase), mientras que valores más altos reflejan mayor mezcla de clases.
+
+        Durante la construcción del árbol, el algoritmo busca dividir los datos de forma que el índice de Gini resultante en los nodos hijos sea lo más bajo posible, es decir, que las particiones sean lo más puras posible.
+        }
     \end{tcolorbox}
+
+    El comportamiento y la complejidad del árbol de decisión pueden controlarse mediante diversos hiperparámetros, entre los que destacan:
+
+    \begin{itemize}
+
+        \item Profundidad máxima del árbol: Limitar este valor ayuda a prevenir el sobreajuste, evitando que el árbol memorice el conjunto de entrenamiento.
+        
+        \item Número mínimo de instancias necesarias para dividir un nodo interno: Si la cantidad de instancias en un nodo interno es menor a este número, entonces el nodo se convertirá en un nodo hoja. Un valor mayor genera árboles más generales y menos propensos al sobreajuste.
+        
+        \item Número mínimo de instancias requeridas para ser nodo hoja: Una división solo puede ocurrir si deja al menos este número de instancias en los dos nodos resultantes.
+        Controla el tamaño mínimo de los nodos terminales y suaviza las predicciones.
+        
+    \end{itemize}
+
+    El ajuste adecuado de estos hiperparámetros permite equilibrar la interpretabilidad del modelo y su capacidad predictiva, logrando un árbol suficientemente expresivo pero sin sobreajustarse a los datos. Lamentablemente, el nodo <<Decision Tree Learner>> de KNIME solo permite modificar el número mínimo de instancias necesarias para dividir un nodo. 
+
+    Durante la construcción del árbol, se busca dividir los datos hasta alcanzar una partición lo más pura posible. Sin embargo, si se permite que el árbol crezca sin restricciones, este puede llegar a sobreajustarse, es decir, adaptarse demasiado a las particularidades del conjunto de entrenamiento y perder capacidad de generalización. Para evitarlo, se emplea una técnica conocida como \textbf{poda} (\textit{pruning}).
+
+    La poda consiste en reducir el tamaño del árbol eliminando ramas que aportan poca o ninguna mejora significativa en la precisión del modelo. El algoritmo C4.5 da la posibilidad de usar la poda MDL (\textit{Minimum Description Length}), que aplica una heurística para reducir el tamaño del árbol y mejorar su generalización. Este proceso contribuye a mejorar la capacidad de generalización del modelo y a mantener una estructura más sencilla y comprensible.
 
     % ------------------------------------------------------------------------------------------------------ %
 
     \item \textbf{Random Forest}: Propone un algoritmo de tipo \textit{ensemble} que combina múltiples árboles de decisión para mejorar la precisión y robustez de las predicciones. El modelo entrena múltiples árboles de decisión \textit{débiles}. Los \textit{weak models} son modelos de aprendizaje automático que, por sí solos, tienen un desempeño apenas mejor que un modelo que adivina al azar, es decir, que tienen una precisión baja pero que aún pueden identificar patrones en los datos. La filosofía de los \textit{ensemble} es aprovechar la diversidad y la sabiduría colectiva de múltiples modelos para construir un predictor robusto y menos propenso a errores individuales.
 
-    Una de las principales ventajas que tiene el árbol de decisión la pierde el Random Forest, que es la explicabilidad, dado que al combinar muchos árboles de decisión, el modelo se vuelve más complejo y menos transparente. En un modelo de Random Forest, aunque cada árbol es interpretable por separado, la combinación de múltiples árboles hace que el proceso de toma de decisiones sea difícil de seguir y explicar en términos sencillos. A cambio, la robustez del modelo frente al sobreajuste mejora, ya que aunque los árboles individuales pueden sobreajustarse, la combinación de múltiples árboles ayuda a suavizar las predicciones y minimizar este problema. Además, como el entrenamiento de cada árbol es independiente, el algoritmo es paralelizable, siendo adecuado para grandes conjuntos de datos.
+    Una de las principales ventajas que tiene el árbol de decisión la pierde el \textit{Random Forest}, que es la explicabilidad, dado que al combinar muchos árboles de decisión, el modelo se vuelve más complejo y menos transparente. En un modelo de \textit{Random Forest}, aunque cada árbol es interpretable por separado, la combinación de múltiples árboles hace que el proceso de toma de decisiones sea difícil de seguir y explicar en términos sencillos. A cambio, la robustez del modelo frente al sobreajuste mejora, ya que aunque los árboles individuales pueden sobreajustarse, la combinación de múltiples árboles ayuda a suavizar las predicciones y minimizar este problema. Además, como el entrenamiento de cada árbol es independiente, el algoritmo es paralelizable, siendo adecuado para grandes conjuntos de datos.
+
+    Los principales hiperparámetros de este modelo son los previos mencionados para los árboles de decisión, además del número de árboles que constituirán el ``bosque''. El nodo <<Random Forest Learner>> en KNIME, en este caso, sí nos permite controlar tanto el número de árboles, como la profundidad máxima del árbol (el número de niveles máximo), y el tamaño mínimo del nodo (número de instancias mínimas). 
 
     % ------------------------------------------------------------------------------------------------------ %
 
@@ -495,10 +503,40 @@ Se han escogido los siguientes modelos el entrenamiento:
 
 \end{itemize}
 
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
 
-\subsubsection{Comparación de modelos y elección}
+\subsection{Experimentación}
 
-La optimización de los hiperparámetros se ha realizado con los nodos <<Parameter Optimization Loop>> de la extensión \textit{KNIME Optimization extension}. En la Figura \ref{fig:churn_spotify_hyperparameter_optimization_knn} se visualiza el esquema de nodos para la optimización del hiperparámetro $k$ del modelo \textit{k}-nearest neighbors. Se ha probado con valores enteros de $k$ entre 1 y 20, y se maximiza la métrica G-Mean (véase la Figura \ref{fig:churn_spotify_config_loop_opt}). Los resultados (Figura \ref{fig:churn_spotify_opt_results}) en este caso, muestran que a menor $k$, mejor es el desempeño del modelo.
+\subsubsection{Definición del protocolo de validación experimental}
+
+A continuación, procederemos a entrenar y evaluar distintos modelos de \textit{machine learning} para los datos del problema, seleccionando finalmente el modelo con el mejor rendimiento. Es fundamental evitar el \textit{data snooping} durante este proceso, para asegurar que la evaluación refleja un rendimiento realista y generalizable.
+
+El \textit{\textbf{data snooping}} ocurre cuando la información de los datos de test dirige el entrenamiento del modelo, es decir, cuando usamos repetidamente los datos de test para tomar decisiones sobre el modelo, como escoger hiperparámetros, seleccionar el mejor modelo de varios probados, o ajustar variables. Como resultado,el modelo se ajusta no solo a los datos de entrenamiento, sino también a las particularidades de los datos de test, llevando a una posible generalización deficiente.
+
+Esta mala práctica podemos evitarla siguiendo un enfoque riguroso en la gestión de los conjuntos de datos.Para lograrlo deberemos:
+
+\begin{itemize}
+
+    \item \textbf{Dividir los datos en conjuntos de entrenamiento, validación y test}: El conjunto de entrenamiento se utiliza para ajustar los parámetros del modelo; el conjunto de validación sirve para la selección de hiperparámetros y la comparación de modelos; y el conjunto de test solo se usa al final, exclusivamente para evaluar el rendimiento del modelo elegido. De esta manera, los datos de test no influyen en ninguna decisión de desarrollo.
+
+    \item \textbf{Aplicar validación cruzada}: Esta técnica permite obtener una evaluación más robusta y confiable del rendimiento del modelo utilizando solo los datos de entrenamiento y validación. Al realizar múltiples divisiones de los datos de entrenamiento, la validación cruzada ayuda a reducir la dependencia de un solo conjunto de validación, minimizando el riesgo de sobreajuste.
+
+    Una implementación de validación cruzada es el \textit{k-fold}, en la que el conjunto de datos se divide en $k$ partes (o \textit{folds}) de tamaño similar. El modelo se entrena $k$ veces, usando en cada iteración $k-1$ pliegues para entrenar y el pliegue restante para validar. 
+
+    En este problema, dado que tenemos un gran número de instancias, utilizaré $k=5$ para la validación cuzada.
+    
+    \item \textbf{Evitar la revisión o análisis del conjunto de test}: Es crucial no utilizar los datos de test para hacer ajustes adicionales en el modelo. El conjunto de test debe mantenerse separado y solo emplearse para la evaluación final del modelo, después de haber tomado todas las decisiones de desarrollo.
+    
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------------- %
+
+\subsubsection{Optimización de hiperparámetros}
+
+Primero, se plantea la optimización de hiperparámetros de los distintos modelos que hemos propuesto, mediante los nodos <<Parameter Optimization Loop>> de la extensión \textit{KNIME Optimization extension}. En la Figura \ref{fig:churn_spotify_hyperparameter_optimization_knn} se visualiza el esquema de nodos para la optimización del hiperparámetro $k$ del modelo \textit{k}-nearest neighbors. Se ha probado con valores enteros de $k$ entre 1 y 20, y se maximiza la métrica G-Mean (véase la Figura \ref{fig:churn_spotify_config_loop_opt}). 
+Esta optimización de parámetros se ha probado con división de los datos de entrenamiento, con el objetivo de evaluar el desempeño del modelo de manera más robusta. Los resultados (véase la Figura \ref{fig:churn_spotify_opt_results}) en este caso muestran que, a menor $k$, mejor es el desempeño del modelo. Por tanto, el modelo \textit{k}-NN candidato tendrá $k=1$.
 
 \begin{tcolorbox}
     [colback=gray!5!white, colframe=gray!60!black, title=NOTA, breakable]
@@ -563,35 +601,74 @@ Al igual que con este modelo, se ha realizado optimización en el resto:
 
 \begin{itemize}
     
-    \item Support Vector Machine:
-    Se experimentó con distintos kernel lineal y polinomial, valores del parámetro de coste $C$ comprendidos entre $2^{-5}$ y $2^{10}$, y grados ---para determinar entre lineal o polinomial--- entre 1 y 5. Dado el elevado número de combinaciones posibles, se optó por una estrategia de random search con 40 iteraciones. La configuración óptima obtenida ha sido con kernel polinómico de grado $3$ y con coste $C$ de $2^{8}$.
+    \item \textit{Support Vector Machine}:
+    Se experimentó con distintos \textit{kernel} lineal y polinomial, valores del parámetro de coste $C$ comprendidos entre $2^{-5}$ y $2^{10}$, y grados ---para determinar entre lineal o polinomial--- entre 1 y 5. Dado el elevado número de combinaciones posibles, se optó por una estrategia de random search con 40 iteraciones. La configuración óptima obtenida ha sido con \textit{kernel} polinómico de grado $3$ y con coste $C$ de $2^{8}$.
 
-    \item Decision Tree:
-    Se probaron configuraciones con y sin poda, empleando como criterios de calidad tanto \textit{Gain Ratio} como \textit{Gini Index}, y variando el número mínimo de hojas por nodo entre 2 y 10. En este caso, fue factible realizar una búsqueda exhaustiva (\textit{grid search}) sobre todas las combinaciones posibles. La configuración óptima encontrada correspondió a un árbol sin poda y con un mínimo de 2 hojas por nodo.
+    \item \textit{Decision Tree}:
+    Se probaron configuraciones con y sin poda, y variando el número mínimo de instancias por nodo interno entre $2^1$ y $2^5$. En este caso, fue factible realizar una búsqueda exhaustiva sobre todas las combinaciones posibles. La configuración óptima encontrada correspondió a un árbol sin poda y con un mínimo de 2 instancias por nodo.
 
-    \item Random Forest:
-    Se evaluaron combinaciones del número de árboles entre 100 y 500, y de la profundidad máxima del árbol entre 5 y 30. La búsqueda se realizó mediante fuerza bruta, con incrementos de 100 en el número de árboles y de 5 en la profundidad. La configuración óptima obtenida fue de 100 árboles con una profundidad máxima de 25.
+    \item \textit{Random Forest}:
+    Se evaluaron combinaciones del número de árboles entre 50 y 500, profundidad máxima del árbol entre $2^1$ y $2^{10}$, y tamaño mínimo del nodo entre $2^1$ y $2^{10}$. Se realizó búsqueda aleatoria de las 3 variables durante 40 iteraciones. La configuración óptima obtenida fue de 420 árboles con una profundidad máxima de 512 y 2 instancias por nodo mínimas.
 
-    \item Gradient Boosting:
-    Se analizaron valores del número de árboles entre 100 y 500, profundidades de árbol entre 5 y 30, y tasas de aprendizaje (\textit{learning rate}) comprendidas entre 0.01 y 0.1. En este caso, se empleó una estrategia de \textit{random search} con 40 iteraciones. La configuración óptima hallada fue: 249 árboles, profundidad máxima de 26 y \textit{learning rate} de 0.03.
+    \item \textit{Gradient Boosting}:
+    Se analizaron valores del número de árboles entre 50 y 500, profundidades de árbol entre $2^1$ y $2^5$ y, y tasas de aprendizaje (\textit{learning rate}) comprendidas entre $4^{-5}$ y $4^0$. En este caso, se empleó una estrategia de \textit{random search} con 40 iteraciones. La configuración óptima hallada fue: 131 árboles, profundidad máxima de 512 y \textit{learning rate} de $4^{-5} \approx 0.001$.
 
 \end{itemize}
 
-Finalmente, se prueba a entrenar cada modelo con los hiperparámetros obtenidos, realizando validación cruzada. Los resultados, plasmados en la Figura \ref{fig:churn_spotify_comparison_results}, señalan como ganador el modelo de Gradient Boosting, seguido de \textit{k}-NN. Aún así, los valores de F1-Score y G-Mean señalan valores muy pobres.
+
+\subsubsection{Comparación de modelos candidatos}
+
+Finalmente, se prueba a entrenar cada modelo con los hiperparámetros obtenidos, realizando validación cruzada tal y como se especificó anteriormente. Los resultados, plasmados en la Figura \ref{fig:churn_spotify_comparison_results} reflejan dos comportamiento: 
+
+\begin{itemize}
+    
+    \item Los modelos SVM, \textit{Decision Tree} y \textit{Random Forest} presentan un \textit{recall} inferior al 5\%, que llega a un 0\% en el caso del árbol de decisión. Esto nos lleva a pensar que apenas clasifican instancias como \code{CHURNED}, limitándose prácticamente a predecir la clase mayoritaria. En consecuencia, el modelo \textit{Decision Tree} obtiene un F1-Score indeterminado, ya que no realiza ninguna predicción positiva, lo que provoca una división por cero en el cálculo de dicha métrica.
+    
+    \item Los modelos \textit{k}-NN y \textit{Gradient Boosting}, en cambio, presenta un \textit{recall} ligeramente superior, sospechosamente cercano al 25.9\% de instancias de la clase \code{CHURNED}, lo que sugiere que la clasificación es aleatoria y que el modelo podría estar simplemente asignando etiquetas positivas al azar en una proporción similar a la distribución original de clases.
+
+\end{itemize}
+
+Estos resultados se refuerzan con lo que se ve en la Figura \ref{fig:churn_spotify_ROC_comparison}, donde las curvas ROC de los distintos modelos se sitúan en torno a la recta aleatoria ---y, por tanto, los valores AUC aproximan a 0.5---, evidenciando una capacidad discriminativa muy limitada. En otras palabras, los modelos no logran distinguir de manera efectiva entre las clases \code{CHURNED} y \code{NOT\_CHURNED}, mostrando un comportamiento próximo al de una clasificación aleatoria.
 
 \begin{figure}[h!]
     \centering
     \fbox{\includegraphics[width=\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_models_comparison.png}}
     \caption{
-        Resultados comparativos de desempeño logrado por cada modelo.
+        Métricas de desempeño logradas por los modelos candidatos.    
     }
     \label{fig:churn_spotify_comparison_results}
 \end{figure}
 
+\begin{figure}[h!]
+    \centering
+    \fbox{\includegraphics[width=\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_ROC_comparison.png}}
+    \caption{
+        Curvas ROC de los modelos candidatos.
+    }
+    \label{fig:churn_spotify_ROC_comparison}
+\end{figure}
 
-\subsubsection{Rendimiento del modelo final}
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
 
-El modelo final, por tanto, es Gradient Boosting, con los valores óptimos obtenidos anteriormente para los hiperparámetros. El modelo logra un F1-Score de apenas 0.29 y un G-Mean de 0.469. Estos son valores muy pobres, ya que un modelo que clasifica aleatoriamente ---si bien, en un escenario balanceado--- típicamente obtendría un F1-Score y un G-Mean de 0.5. El bajo valor del F1-Score indica una deficiente capacidad para identificar correctamente los casos positivos, mientras que el G-Mean confirma que el modelo no logra equilibrar adecuadamente el rendimiento entre ambas clases.
+\subsubsection{Modelo final}
 
-El modelo, por tanto, presenta un desempeño claramente insuficiente para el problema planteado. Esto sugiere que el conjunto de características disponibles no aporta información discriminativa suficiente.
+No se ha escogido ningún modelo, ya que se desestima su uso al no alcanzar un rendimiento aceptable en las métricas de evaluación, mostrando un comportamiento cercano al azar.
+
+% El modelo final escogido es, por tanto, \textit{Gradient Boosting}, con la configuración óptima para los  hiperparámetros obtenida anteriormente: 249 árboles, profundidad máxima de 26 y 
+
+% valores óptimos obtenidos anteriormente para los hiperparámetros. El modelo logra un F1-Score de apenas 0.29 y un G-Mean de 0.469. Estos son valores muy pobres, ya que un modelo que clasifica aleatoriamente ---si bien, en un escenario balanceado--- típicamente obtendría un F1-Score y un G-Mean de 0.5. El bajo valor del F1-Score indica una deficiente capacidad para identificar correctamente los casos positivos, mientras que el G-Mean confirma que el modelo no logra equilibrar adecuadamente el rendimiento entre ambas clases.
+
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------------------------------- %
+
+\subsection{Conclusión}
+
+Los resultados obtenidos ponen de manifiesto la dificultad de predecir la cancelación de suscripciones (\textit{churn}) en el conjunto de datos analizado. A pesar de haberse realizado una optimización exhaustiva de hiperparámetros y validación cruzada para cada modelo, ninguno ha alcanzado un rendimiento satisfactorio. Las métricas de evaluación ---especialmente el \textit{recall}, el F1-Score y el G-Mean--- revelan una escasa capacidad de discriminación entre las clases, situándose los modelos cerca del comportamiento aleatorio.
+
+En particular, los modelos \textit{Decision Tree}, \textit{Random Forest} y SVM tienden a predecir únicamente la clase mayoritaria, mientras que \textit{k}-NN y \textit{Gradient Boosting} muestran ligeras mejoras, aunque insuficientes para considerarse útiles en la práctica.
+
+Estos resultados sugieren la necesidad de incorporar nuevas variables que aporten mayor capacidad discriminativa. 
+
 

@@ -9,25 +9,52 @@
             <entry key="type" type="xstring" value="variable"/>
             <entry key="name" type="xstring" value="max_tree_depth"/>
             <entry key="class" type="xstring" value="INTEGER"/>
-            <entry key="value" type="xint" value="3"/>
+            <entry key="value" type="xint" value="1"/>
         </config>
         <config key="Variable_2">
             <entry key="type" type="xstring" value="variable"/>
             <entry key="name" type="xstring" value="num_trees"/>
             <entry key="class" type="xstring" value="INTEGER"/>
-            <entry key="value" type="xint" value="538"/>
+            <entry key="value" type="xint" value="219"/>
         </config>
         <config key="Variable_3">
             <entry key="type" type="xstring" value="variable"/>
             <entry key="name" type="xstring" value="learning_rate"/>
             <entry key="class" type="xstring" value="INTEGER"/>
-            <entry key="value" type="xint" value="3"/>
+            <entry key="value" type="xint" value="-5"/>
         </config>
         <config key="Variable_4">
             <entry key="type" type="xstring" value="variable"/>
             <entry key="name" type="xstring" value="iteration"/>
             <entry key="class" type="xstring" value="INTEGER"/>
             <entry key="value" type="xint" value="0"/>
+        </config>
+        <config key="Loop_Execute_5">
+            <entry key="type" type="xstring" value="loopcontext_execute"/>
+        </config>
+        <config key="Variable_6">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="max_tree_depth"/>
+            <entry key="class" type="xstring" value="INTEGER"/>
+            <entry key="value" type="xint" value="6"/>
+        </config>
+        <config key="Variable_7">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="num_trees"/>
+            <entry key="class" type="xstring" value="INTEGER"/>
+            <entry key="value" type="xint" value="155"/>
+        </config>
+        <config key="Variable_8">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="learning_rate"/>
+            <entry key="class" type="xstring" value="INTEGER"/>
+            <entry key="value" type="xint" value="-2"/>
+        </config>
+        <config key="Variable_9">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="iteration"/>
+            <entry key="class" type="xstring" value="INTEGER"/>
+            <entry key="value" type="xint" value="37"/>
         </config>
     </config>
     <config key="internal_node_subsettings">
@@ -37,30 +64,30 @@
         <entry key="parameters" type="xint" value="3"/>
         <config key="parameter_0">
             <entry key="name" type="xstring" value="max_tree_depth"/>
-            <entry key="from" type="xdouble" value="3.0"/>
+            <entry key="from" type="xdouble" value="1.0"/>
             <entry key="to" type="xdouble" value="10.0"/>
             <entry key="step" type="xdouble" value="1.0"/>
             <entry key="integer" type="xboolean" value="true"/>
         </config>
         <config key="parameter_1">
             <entry key="name" type="xstring" value="num_trees"/>
-            <entry key="from" type="xdouble" value="100.0"/>
-            <entry key="to" type="xdouble" value="1000.0"/>
+            <entry key="from" type="xdouble" value="50.0"/>
+            <entry key="to" type="xdouble" value="500.0"/>
             <entry key="step" type="xdouble" value="100.0"/>
             <entry key="integer" type="xboolean" value="true"/>
         </config>
         <config key="parameter_2">
             <entry key="name" type="xstring" value="learning_rate"/>
-            <entry key="from" type="xdouble" value="1.0"/>
-            <entry key="to" type="xdouble" value="10.0"/>
+            <entry key="from" type="xdouble" value="-5.0"/>
+            <entry key="to" type="xdouble" value="0.0"/>
             <entry key="step" type="xdouble" value="1.0"/>
             <entry key="integer" type="xboolean" value="true"/>
         </config>
-        <entry key="method" type="xstring" value="BayesianOptimization"/>
-        <entry key="useSeed" type="xboolean" value="false"/>
-        <entry key="seed" type="xlong" value="1761822773305"/>
-        <entry key="numTrials" type="xint" value="20"/>
-        <entry key="useEarlyStopping" type="xboolean" value="true"/>
+        <entry key="method" type="xstring" value="RandomSearch"/>
+        <entry key="useSeed" type="xboolean" value="true"/>
+        <entry key="seed" type="xlong" value="42"/>
+        <entry key="numTrials" type="xint" value="40"/>
+        <entry key="useEarlyStopping" type="xboolean" value="false"/>
         <entry key="sizeMovingWindow" type="xint" value="5"/>
         <entry key="tolerance" type="xdouble" value="0.01"/>
         <entry key="enableStepSize" type="xboolean" value="false"/>
@@ -69,7 +96,7 @@
         <entry key="numCandidatesPerRound" type="xint" value="25"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
     <entry key="factory" type="xstring" value="org.knime.optimization.internal.node.parameter.loopstart.LoopStartParOptNodeFactory"/>
     <entry key="node-name" type="xstring" value="Parameter Optimization Loop Start"/>
     <entry key="node-bundle-name" type="xstring" value="KNIME Optimization extension"/>
@@ -82,16 +109,21 @@
     <entry key="node-feature-version" type="xstring" value="5.6.0.v202507151411"/>
     <config key="factory_settings"/>
     <entry key="name" type="xstring" value="Parameter Optimization Loop Start"/>
-    <entry key="hasContent" type="xboolean" value="false"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
         <config key="port_1">
             <entry key="index" type="xint" value="1"/>
-            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.node.port.flowvariable.FlowVariablePortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.port.flowvariable.FlowVariablePortObject"/>
+            <entry key="port_object_summary" type="xstring" value="Variables connection"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
         </config>
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="aecf7f89-71d4-4edf-8bfd-e6a99c4f72ec"/>
     </config>
 </config>

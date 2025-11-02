@@ -10,27 +10,45 @@
         </config>
         <config key="Variable_1">
             <entry key="type" type="xstring" value="variable"/>
-            <entry key="name" type="xstring" value="QualityMeasure Method"/>
+            <entry key="name" type="xstring" value="pruning_method"/>
             <entry key="class" type="xstring" value="STRING"/>
             <entry key="value" type="xstring" value="missing"/>
         </config>
         <config key="Variable_2">
             <entry key="type" type="xstring" value="variable"/>
-            <entry key="name" type="xstring" value="Pruning Method"/>
-            <entry key="class" type="xstring" value="STRING"/>
-            <entry key="value" type="xstring" value="missing"/>
+            <entry key="name" type="xstring" value="pruning_binary"/>
+            <entry key="class" type="xstring" value="INTEGER"/>
+            <entry key="value" type="xint" value="0"/>
         </config>
         <config key="Variable_3">
             <entry key="type" type="xstring" value="variable"/>
-            <entry key="name" type="xstring" value="PruningID"/>
+            <entry key="name" type="xstring" value="min_records_per_node"/>
             <entry key="class" type="xstring" value="INTEGER"/>
             <entry key="value" type="xint" value="0"/>
         </config>
         <config key="Variable_4">
             <entry key="type" type="xstring" value="variable"/>
-            <entry key="name" type="xstring" value="QualityMeasureID"/>
+            <entry key="name" type="xstring" value="RowID"/>
+            <entry key="class" type="xstring" value="STRING"/>
+            <entry key="value" type="xstring" value="Row0"/>
+        </config>
+        <config key="Variable_5">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="pruning_method"/>
+            <entry key="class" type="xstring" value="STRING"/>
+            <entry key="value" type="xstring" value="MDL"/>
+        </config>
+        <config key="Variable_6">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="pruning_binary"/>
             <entry key="class" type="xstring" value="INTEGER"/>
-            <entry key="value" type="xint" value="0"/>
+            <entry key="value" type="xint" value="1"/>
+        </config>
+        <config key="Variable_7">
+            <entry key="type" type="xstring" value="variable"/>
+            <entry key="name" type="xstring" value="min_records_per_node"/>
+            <entry key="class" type="xstring" value="INTEGER"/>
+            <entry key="value" type="xint" value="1024"/>
         </config>
     </config>
     <config key="internal_node_subsettings">
@@ -92,7 +110,7 @@
         </config>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
     <entry key="factory" type="xstring" value="org.knime.base.node.flowvariable.tablerowtovariable3.TableToVariable3NodeFactory"/>
     <entry key="node-name" type="xstring" value="Table Row to Variable"/>
     <entry key="node-bundle-name" type="xstring" value="KNIME Base Nodes"/>
@@ -105,12 +123,17 @@
     <entry key="node-feature-version" type="xstring" value="5.8.0.v202510021208"/>
     <config key="factory_settings"/>
     <entry key="name" type="xstring" value="Table Row to Variable"/>
-    <entry key="hasContent" type="xboolean" value="false"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
         <config key="port_1">
             <entry key="index" type="xint" value="1"/>
-            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.node.port.flowvariable.FlowVariablePortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.port.flowvariable.FlowVariablePortObject"/>
+            <entry key="port_object_summary" type="xstring" value="Variables connection"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
         </config>
     </config>
     <config key="filestores">

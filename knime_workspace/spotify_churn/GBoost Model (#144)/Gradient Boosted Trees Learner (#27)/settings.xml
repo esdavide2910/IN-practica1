@@ -8,7 +8,7 @@
     <config key="model">
         <entry key="targetColumn" type="xstring" value="churned_status"/>
         <entry key="seed" type="xstring" value="1730551645273"/>
-        <entry key="maxLevels" type="xint" value="26"/>
+        <entry key="maxLevels" type="xint" value="512"/>
         <entry key="minNodeSize" type="xint" value="-1"/>
         <entry key="minChildSize" type="xint" value="-1"/>
         <entry key="dataFraction" type="xdouble" value="1.0"/>
@@ -18,7 +18,7 @@
         <entry key="columnFractionPerTree" type="xdouble" value="1.0"/>
         <entry key="columnAbsolutePerTree" type="xint" value="10"/>
         <entry key="isUseDifferentAttributesAtEachNode" type="xboolean" value="false"/>
-        <entry key="nrModels" type="xint" value="249"/>
+        <entry key="nrModels" type="xint" value="131"/>
         <entry key="splitCriterion" type="xstring" value="Gini"/>
         <entry key="missingValueHandling" type="xstring" value="XGBoost"/>
         <entry key="useAverageSplitPoints" type="xboolean" value="true"/>
@@ -78,11 +78,11 @@
         <entry key="nrHilitePatterns" type="xint" value="0"/>
         <entry key="saveTargetDistributionInNodes" type="xboolean" value="false"/>
         <entry key="rowSamplingMode" type="xstring" value="Random"/>
-        <entry key="learningRate" type="xdouble" value="0.03"/>
+        <entry key="learningRate" type="xdouble" value="0.001"/>
         <entry key="alphaFraction" type="xdouble" value="0.95"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
     <entry key="factory" type="xstring" value="org.knime.base.node.mine.treeensemble2.node.gradientboosting.learner.classification.GradientBoostingClassificationLearnerNodeFactory2"/>
     <entry key="node-name" type="xstring" value="Gradient Boosted Trees Learner"/>
     <entry key="node-bundle-name" type="xstring" value="Decisions Tree Ensembles for KNIME"/>
@@ -95,12 +95,17 @@
     <entry key="node-feature-version" type="xstring" value="5.6.0.v202507151410"/>
     <config key="factory_settings"/>
     <entry key="name" type="xstring" value="Gradient Boosted Trees Learner"/>
-    <entry key="hasContent" type="xboolean" value="false"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
         <config key="port_1">
             <entry key="index" type="xint" value="1"/>
-            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.base.node.mine.treeensemble2.model.TreeEnsembleModelPortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.base.node.mine.treeensemble2.model.GradientBoostingModelPortObject"/>
+            <entry key="port_object_summary" type="xstring" value="Gradient Boosting Model"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
         </config>
     </config>
     <config key="filestores">
