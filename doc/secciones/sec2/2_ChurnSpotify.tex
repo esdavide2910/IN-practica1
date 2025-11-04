@@ -39,11 +39,9 @@ Cada tipo de dato requiere un tratamiento específico, y algunos modelos serán 
 
 Además, las variables categóricas y numéricas presentan una semántica muy distinta. Generalmente, las variables categóricas no presentan un orden inherente en sus valores, a diferencia de las variables numéricas. Sin embargo, es común encontrar en ciertos conjuntos de datos variables codificadas con números enteros que actúan como códigos, pero que, desde un punto de vista semántico, se comportan como variables categóricas, ya que no presentan un orden inherente en sus valores; por ejemplo, el código \code{2} no está más cerca del \code{3} que del \code{4}. Cuando identifiquemos este tipo de variables, el primer paso en el preprocesamiento será cambiar su codificación para evitar que los modelos los interpreten como variables numéricas, que puedan llegar a tener alterar el sentido de una predicción.
 
-El caso opuesto también puede darse cuando encontramos variables categóricas que presentan un orden lineal en su significado, aunque este no esté reflejado en su valor de texto. 
-A estas variables, les asignaremos valores numéricos para capturar ese orden en el análisis.
+El caso opuesto también puede darse cuando encontramos variables categóricas que presentan un orden lineal en su significado, aunque este no esté reflejado en su valor de texto. A estas variables, les asignaremos valores numéricos para capturar ese orden en el análisis.
 
-En este proyecto, encontramos una variable de tipo categórico representada por números enteros, esta es la variable objetivo \code{is\_churned}, anteriormente analizada. 
-En la primera modificación del conjunto de datos original, cambiaremos el tipo de dato de esta columna a \textit{string}, reemplazando el valor \code{1} por \code{CHURNED}, y el \code{0} por \code{NOT\_CHURNED}.
+En este proyecto, encontramos una variable de tipo categórico representada por números enteros, esta es la variable objetivo \code{is\_churned}, anteriormente analizada. En la primera modificación del conjunto de datos original, cambiaremos el tipo de dato de esta columna a \textit{string}, reemplazando el valor \code{1} por \code{CHURNED}, y el \code{0} por \code{NOT\_CHURNED}.
 
 El resto de variables del dataset son las siguientes:
 
@@ -69,7 +67,9 @@ El resto de variables del dataset son las siguientes:
 
 \subsubsection{Carga de datos}
 
-La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>. En la Figura \ref{fig:spotify_churn_CSV_reader} vemos que el conjunto de datos tiene 8 000 instancias, cada una con 12 características y su \textbf{etiqueta} (el valor real de la variable \textit{target} en cada instancia).
+La carga de datos la realizamos con un nodo de entrada <<CSV Reader>>. En la Figura \ref{fig:spotify_churn_CSV_reader} vemos que el conjunto de datos tiene 8 000 instancias, cada una con 11 características o atributos y su \textbf{etiqueta} (el valor real de la variable \textit{target} en cada instancia).
+
+Preventivamente, eliminamos la característica \code{user\_id}, ya que es única por cada ejemplo y, por tanto, no presenta capacidad discriminadora. 
 
 \begin{figure}[h!]
     \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_CSV_reader.png}}
@@ -118,12 +118,12 @@ En todas las características comprobamos que las diversas categorías están mu
 Por otro lado, la variable objetivo, \code{churned\_status}, presenta \code{CHURNED} en el 25.89\% de las instancias, y \code{NOT\_CHURNED} en el 74.11\% restante. 
 
 ¿Y cómo se relacionan los atributos con ella?
-En la Figura \ref{fig:churn_spotify_parallelcategories_categorical_attributes} se muestra cómo se corresponden estas variables categóricas en sus distintos valores con las clases de la variable objetivo mediante un gráfico de Categorías Paralelas. Este gráfico es súmamente útil, ya que nos permite ver qué proporción de cada valor hay por cada variable categórica, identificar combinaciones más comunes entre categorías, así como ver la proporción de préstamos aprobados o denegados por cada uno de esos valores. En la gráfica se observa que existe prácticamente la misma proporción de usuarios dentro de cada grupo que cancela la cuenta, es decir, el \textit{churn} se distribuye de manera uniforme entre las diferentes categorías analizadas, sin que ninguna combinación particular de atributos categóricos muestre una predisposición significativamente mayor a la cancelación del servicio. Esto sugiere que estas variables categóricas por sí solas no son predictores fuertes de la cancelación.
+En la Figura \ref{fig:churn_spotify_parallelcategories_categorical_variables} se muestra cómo se corresponden estas variables categóricas en sus distintos valores con las clases de la variable objetivo mediante un gráfico de Categorías Paralelas. Este gráfico es súmamente útil, ya que nos permite ver qué proporción de cada valor hay por cada variable categórica, identificar combinaciones más comunes entre categorías, así como ver la proporción de préstamos aprobados o denegados por cada uno de esos valores. En la gráfica se observa que existe prácticamente la misma proporción de usuarios dentro de cada grupo que cancela la cuenta, es decir, el \textit{churn} se distribuye de manera uniforme entre las diferentes categorías analizadas, sin que ninguna combinación particular de atributos categóricos muestre una predisposición significativamente mayor a la cancelación del servicio. Esto sugiere que estas variables categóricas por sí solas no son predictores fuertes de la cancelación.
 
 \begin{figure}[h!]
     \fbox{\includegraphics[width=1.0\textwidth, keepaspectratio]{secciones/sec2/imagenes/churn_spotify_parallelcategories_categorical_variables.png}}
     \caption{Visualización de categorías paralelas en las variables categóricas.}
-    \label{fig:churn_spotify_parallelcategories_categorical_attributes}
+    \label{fig:churn_spotify_parallelcategories_categorical_variables}
 \end{figure} 
 
 \begin{tcolorbox}
